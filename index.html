@@ -185,6 +185,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .tab:focus-vi
 .dot.wait { background: #e8c040; }
 #onlinebtn { position: absolute; right: 8px; top: 34px; pointer-events: auto; padding: 3px 9px; border: 0; font-size: 12px; color: var(--text); background: rgba(15,12,22,.8); box-shadow: inset 1px 1px 0 var(--hi), inset -1px -1px 0 var(--lo); cursor: pointer; font-variant-numeric: tabular-nums; }
 #onlinebtn:hover { background: rgba(46,38,64,.95); }
+#sbrbtn { position: absolute; right: 8px; top: 62px; pointer-events: auto; padding: 5px 9px; border: 0; color: #fff0c8; background: rgba(82,48,23,.92); box-shadow: inset 1px 1px 0 #e1a64a, inset -1px -1px 0 #160d08; cursor: pointer; font-size: 12px; }
+#sbrbtn[hidden] { display: none; }
 #party { position: absolute; left: 8px; top: 46px; width: 184px; pointer-events: auto; padding: 5px 6px 6px; background: rgba(15,12,22,.8); box-shadow: inset 1px 1px 0 var(--hi), inset -1px -1px 0 var(--lo), 0 0 0 2px #08060c; }
 #party[hidden], #kbdmsg[hidden] { display: none; }
 .phead { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 3px; }
@@ -419,6 +421,7 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
       <div id="bossbar" hidden></div>
       <div id="clock"></div>
       <button id="onlinebtn" type="button" title="Jogadores online"><i class="dot"></i>solo</button>
+      <button id="sbrbtn" type="button" hidden>Steel Ball Run</button>
       <div id="party" hidden></div>
       <div id="banner" hidden><b></b><span></span></div>
       <div id="lvlup" hidden><b></b><span></span></div>
@@ -4171,6 +4174,51 @@ function genVazio() {
 Object.assign(MAPGEN, { praca: genPraca, doce: genDoce, cristal: genCristal, vazio: genVazio });
 Object.assign(MAPNAMES, { praca: 'Praça das Trocas', doce: 'Dimensão Doce', cristal: 'Dimensão Cristalina', vazio: 'Dimensão do Vazio' });
 
+// ------------------------------------------------------------
+// Steel Ball Run — pista fixa para corridas globais raras
+// ------------------------------------------------------------
+const SBR_PERIOD = 2 * 60 * 60 * 1000;
+const SBR_JOIN_MS = 90000, SBR_RACE_MS = 5 * 60 * 1000;
+const SBR_CHECKPOINTS = [{ x: 11, y: 11 }, { x: 59, y: 11 }, { x: 59, y: 39 }, { x: 11, y: 39 }];
+function sbrServerId() { return NET && NET.sv && NET.sv !== 'lobby' ? NET.sv : UI && UI.selSv || 'aurora'; }
+function sbrEventAt(now, server) {
+  const period = Math.floor(now / SBR_PERIOD);
+  for (let cycle = period; cycle >= period - 1; cycle--) {
+    const startAt = cycle * SBR_PERIOD + 15 * 60 * 1000 + hashStr('quadria-sbr:' + cycle + ':' + server) % (90 * 60 * 1000);
+    const event = { id: 'sbr-' + cycle + '-' + server, startAt, joinAt: startAt - SBR_JOIN_MS, finishAt: startAt + SBR_RACE_MS };
+    if (now >= event.joinAt && now <= event.finishAt) return event;
+  }
+  return null;
+}
+function genSteelBallRun() {
+  const W = 72, H = 50;
+  const m = new GameMap('sbr', 'Steel Ball Run', W, H, { daycycle: true, tint: 'rgba(255,190,90,0.035)' });
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { m.setT(x, y, T.SAND); m.z[m.idx(x, y)] = 41; }
+  // pista em anel: os quatro vãos internos obrigam a completar o circuito.
+  fillRect(m, 7, 7, 58, 7, T.SSTONE);
+  fillRect(m, 58, 10, 7, 30, T.SSTONE);
+  fillRect(m, 7, 36, 58, 7, T.SSTONE);
+  fillRect(m, 7, 10, 7, 30, T.SSTONE);
+  // cânion central e barreiras que impedem atalhos entre os lados da pista.
+  fillRect(m, 16, 17, 7, 16, T.W_SAND);
+  fillRect(m, 30, 14, 7, 19, T.W_SAND);
+  fillRect(m, 44, 17, 7, 16, T.W_SAND);
+  for (const [x, y] of [[8, 8], [63, 8], [63, 41], [8, 41]]) m.setO(x, y, O.BONES);
+  for (let x = 16; x < 57; x += 4) { m.setO(x, 9, O.BANNER, (x / 4) % 3); m.setO(x, 41, O.BANNER, (x / 4) % 3); }
+  for (const [x, y] of [[14, 15], [24, 15], [39, 15], [53, 15], [14, 34], [24, 34], [39, 34], [53, 34]]) m.setO(x, y, O.CACTUS);
+  // largada/chegada, retorno e ancoragem dos corredores.
+  m.setO(9, 23, O.BANNER, 1);
+  for (const [x, y] of [[11, 11], [59, 11], [59, 39], [11, 39]]) m.setO(x, y, O.BANNER, 2);
+  addSign(m, 18, 12, 'Steel Ball Run: siga os quatro estandartes na ordem e volte à linha de chegada.');
+  addWarp(m, 4, 24, O.STAIRS_UP, { m: 'ov', a: 'hub' }, 'return');
+  m.anchors.start = { x: 10, y: 23 };
+  m.anchors.hub = { x: 10, y: 23 };
+  for (let y = 3; y < H - 3; y++) for (let x = 3; x < W - 3; x++) m.pz[m.idx(x, y)] = 1;
+  return m;
+}
+MAPGEN.sbr = genSteelBallRun;
+MAPNAMES.sbr = 'Steel Ball Run';
+
 // ---- 40-game.js ----
 // ============================================================
 // QUADRIA — estado do jogo, personagem, itens, inventário
@@ -4382,6 +4430,25 @@ function itemLines(it, p) {
 // ------------------------------------------------------------
 // personagem
 // ------------------------------------------------------------
+const MOUNTS = {
+  dunerunner: { n: 'Corcel das Dunas', c: '#b87942', price: 2, d: 'Montaria veloz, criada para atravessar a areia.' },
+  cactuskip: { n: 'Saltador de Cacto', c: '#6f9b4d', price: 4, d: 'Pequeno, resistente e surpreendentemente rápido.' },
+  starlight: { n: 'Corcel Estelar', c: '#68bcd4', price: 6, d: 'Uma montaria rara com brilho celeste.' },
+};
+const STANDS = {
+  bulwark: { n: 'Bulwark', c: '#72b8a0', price: 4, passive: 'Armadura +3', ability: 'Guardião: reduz o dano recebido por 5 s.', cd: 30000 },
+  flare: { n: 'Flare', c: '#ff8a48', price: 5, passive: 'Poder mágico +5%', ability: 'Rajada: golpe de energia no alvo próximo.', cd: 18000 },
+  mender: { n: 'Mender', c: '#86d887', price: 5, passive: 'Regeneração +2', ability: 'Pulso vital: recupera 30% da vida máxima.', cd: 25000 },
+};
+function hasMount(p, id) { return !!(p && Array.isArray(p.mounts) && p.mounts.includes(id) && MOUNTS[id]); }
+function activeMount(p) { return p && hasMount(p, p.mount) ? MOUNTS[p.mount] : null; }
+function mountDismount(reason) {
+  const p = G.p;
+  if (!p || !p.mount) return;
+  p.mount = null; G.saveDirty = true; NET.lastPres = '';
+  if (reason) log('Você desmontou: ' + reason + '.', 'sys');
+  netPresence(); G.dirty.peers = 1;
+}
 function newPlayer(name, voc, look) {
   const V = VOC[voc];
   const p = { id: G.nextId++, kind: 'player', name, voc, look, lvl: 1, xp: 0, hp: 1, mp: 1, maxHp: 1, maxMp: 1, gold: 60,
@@ -4391,7 +4458,8 @@ function newPlayer(name, voc, look) {
     map: 'ov', x: 0, y: 0, fx: 0, fy: 0, rx: 0, ry: 0, mt: 1, mdur: 300, dir: 0, face: 1, flash: 0, slowUntil: 0, stunUntil: 0,
     atkReady: 0, gcd: 0, potCd: 0, lastCombat: -1e9, dead: false, path: null, pending: null,
     stats: { kills: 0, deaths: 0, playT: 0, chests: 0, bosses: 0, maxHit: 0, fish: 0 }, created: Date.now(),
-    fish: [], fishCap: FISH_CAP0, fdex: {}, fdexRew: {}, fishing: { lvl: 1, xp: 0 }, bait: null, codes: {} };
+    fish: [], fishCap: FISH_CAP0, fdex: {}, fdexRew: {}, fishing: { lvl: 1, xp: 0 }, bait: null, codes: {},
+    mounts: [], mount: null, stands: [], stand: null, standReadyAt: 0, eventTokens: 0, sbrRewards: [] };
   for (const slot in V.start) p.eq[slot] = makeItem(V.start[slot], 0);
   const mage = voc === 'sorcerer' || voc === 'druid';
   addToBag(p, makeItem('pot_hp1', 0, 6));
@@ -4434,6 +4502,9 @@ function calcStats(p) {
   if (!p.eq.weapon) s.atk = FISTS.atk;
   s.atk += s.atkBonus;
   for (const el in s.res) s.res[el] = Math.min(75, s.res[el] + s.allres);
+  if (p.stand === 'bulwark' && p.stands.includes('bulwark')) s.arm += 3;
+  if (p.stand === 'flare' && p.stands.includes('flare')) s.mag += 5;
+  if (p.stand === 'mender' && p.stands.includes('mender')) s.hpr += 2;
   const sh = p.eq.off && ITEMS[p.eq.off.b].cat === 'shield' ? Math.round(ITEMS[p.eq.off.b].def * itemMult(p.eq.off)) : 0;
   if (sh) s.block = clamp((sh * 0.22 + p.skills.shield.l * 0.25) * (p.voc === 'knight' ? 1 : 0.5), 0, 35);
   s.maxHp = V.hp0 + V.hpL * (p.lvl - 1) + s.hp;
@@ -4453,6 +4524,7 @@ function speedFactor(a) {
 function stepDur(a, dx, dy, base) {
   const m = G.maps[a.map];
   let d = (base || 300) / speedFactor(a);
+  if (a === G.p && activeMount(a) && G.t - a.lastCombat > 6000) d /= 1.2;
   const t = TILE[m.tile(a.x + dx, a.y + dy)];
   if (t && t.slow) d *= t.slow;
   if (dx && dy) d *= 1.35;
@@ -4716,6 +4788,7 @@ function arrivalNear(m, x, y) {
 }
 function changeMap(id, where) {
   const p = G.p, old = G.map;
+  if (old && old.id === 'sbr' && id !== 'sbr' && p && p.race) { p.race = null; G.saveDirty = true; }
   const m = getMap(id);
   let pos = where && where.a ? m.anchors[where.a] : where;
   if (!pos) pos = m.anchors.hub || m.anchors.up || { x: m.w >> 1, y: m.h >> 1 };
@@ -4915,6 +4988,7 @@ function damagePlayer(raw, el, src, o) {
   const p = G.p;
   o = o || {};
   if (!p || p.dead || G.godMode) return 0;
+  if (p.mount) mountDismount('entrou em combate');
   if (G.map.pz[G.map.idx(p.x, p.y)]) return 0;
   const s = p.st;
   if (el === 'phys' && (o.melee || o.ranged) && s.block > 0 && Math.random() * 100 < s.block) {
@@ -4926,6 +5000,7 @@ function damagePlayer(raw, el, src, o) {
   if (el === 'phys') v *= 100 / (100 + s.arm * 1.5);
   else v *= 1 - s.res[el] / 100;
   if (p.buffs.ironwall > G.t) v *= 0.5;
+  if (p.buffs.standGuard > G.t) v *= 0.7;
   v = Math.max(1, Math.round(v));
   if (o.melee && p.eq.off && ITEMS[p.eq.off.b].cat === 'shield') train('shield', 0.5);
   if (p.buffs.manashield > G.t && p.mp > 0) {
@@ -5055,6 +5130,7 @@ function playerAutoAttack() {
   if (w.range > 1 && !los(m, p.x, p.y, t.x, t.y)) return;
   p.atkReady = G.t + atkInterval(p);
   p.lastCombat = G.t;
+  if (p.mount) mountDismount('entrou em combate');
   faceTo(p, t);
   if (t.def.passive) t.provoked = G.t;
   if (w.skill === 'magic') {
@@ -5098,6 +5174,7 @@ function castSpell(id) {
   p.cds[id] = G.t + sp.cd * (1 - Math.min(40, p.st.cdr) / 100);
   p.gcd = G.t + 850;
   p.lastCombat = G.t;
+  if (p.mount) mountDismount('usou uma habilidade em combate');
   say(p, sp.w, '#ffb04a', true);
   if (t) faceTo(p, t);
   G.dirty.hot = 1;
@@ -5369,6 +5446,7 @@ function killMonster(mn, by) {
 function playerDie(src) {
   const p = G.p;
   if (p.dead) return;
+  if (p.race) sbrLeave();
   p.dead = true; p.hp = 0;
   G.lastKiller = src && src.def ? src.def.name || src.def.n : '?';
   const lost = Math.round((xpFor(p.lvl + 1) - xpFor(p.lvl)) * 0.12);
@@ -6148,8 +6226,9 @@ function serialize() {
   for (const k in p.chests) if (p.chests[k] > Date.now()) chests[k] = p.chests[k];
   return { v: 1, t: Date.now(), name: p.name, voc: p.voc, look: p.look, lvl: p.lvl, xp: p.xp, hp: Math.round(p.hp), mp: Math.round(p.mp), gold: p.gold,
     skills: p.skills, eq: p.eq, bag: p.bag, depot: p.depot, hot: p.hot, quests: p.quests, tasks: p.tasks, kills: p.kills, ways: p.ways, temple: p.temple,
-    buffs, chests, seen: p.seen, stats: p.stats, escrow: p.escrow && p.escrow.length ? p.escrow : undefined, pos: isRaidMap(p.map) && !p.dead ? { m: 'praca', x: 14, y: 26, dead: false } : { m: p.dead ? templeFor(p.temple).m : p.map, x: p.x, y: p.y, dead: p.dead }, raids: p.raids, guild: p.guild, admin: p.admin ? 1 : 0, opt: G.opt, explore, dayT: G.dayT, created: p.created,
-    fish: p.fish, fishCap: p.fishCap, fdex: p.fdex, fdexRew: p.fdexRew, fishing: p.fishing, bait: p.bait, codes: p.codes };
+    buffs, chests, seen: p.seen, stats: p.stats, escrow: p.escrow && p.escrow.length ? p.escrow : undefined, pos: p.map === 'sbr' ? { m: 'ov', x: TEMPLES.aurora.x, y: TEMPLES.aurora.y, dead: false } : isRaidMap(p.map) && !p.dead ? { m: 'praca', x: 14, y: 26, dead: false } : { m: p.dead ? templeFor(p.temple).m : p.map, x: p.x, y: p.y, dead: p.dead }, raids: p.raids, guild: p.guild, admin: p.admin ? 1 : 0, opt: G.opt, explore, dayT: G.dayT, created: p.created,
+    fish: p.fish, fishCap: p.fishCap, fdex: p.fdex, fdexRew: p.fdexRew, fishing: p.fishing, bait: p.bait, codes: p.codes,
+    mounts: p.mounts, mount: p.mount, stands: p.stands, stand: p.stand, standReadyAt: p.standReadyAt, eventTokens: p.eventTokens, sbrRewards: p.sbrRewards };
 }
 function validItem(it) { return it && ITEMS[it.b] ? it : null; }
 function deserialize(s) {
@@ -6183,6 +6262,13 @@ function deserialize(s) {
   p.fishing = { lvl: clamp((s.fishing && s.fishing.lvl) | 0, 1, 100) || 1, xp: Math.max(0, +(s.fishing && s.fishing.xp) || 0) };
   p.bait = own(BAIT, s.bait) ? s.bait : null;
   p.codes = s.codes && typeof s.codes === 'object' ? s.codes : {};
+  p.mounts = Array.isArray(s.mounts) ? [...new Set(s.mounts.filter((id) => own(MOUNTS, id)))].slice(0, 20) : [];
+  p.mount = p.mounts.includes(s.mount) ? s.mount : null;
+  p.stands = Array.isArray(s.stands) ? [...new Set(s.stands.filter((id) => own(STANDS, id)))].slice(0, 20) : [];
+  p.stand = p.stands.includes(s.stand) ? s.stand : null;
+  p.standReadyAt = Math.max(0, +s.standReadyAt || 0);
+  p.eventTokens = clamp(Math.floor(+s.eventTokens || 0), 0, 1e6);
+  p.sbrRewards = Array.isArray(s.sbrRewards) ? [...new Set(s.sbrRewards.filter((id) => typeof id === 'string' && /^sbr-\d+-[a-z0-9-]{2,30}$/.test(id)))].slice(-30) : [];
   p.raids = s.raids && typeof s.raids === 'object' ? s.raids : {};
   p.admin = s.admin === 1 && isAdminName(p.name) ? 1 : 0;
   const gs = s.guild;
@@ -7240,6 +7326,7 @@ function actorSprite(a, now) {
 }
 function drawActor(g, a, camPX, camPY, S, now) {
   const { img, sc } = actorSprite(a, now);
+  const moving = a.mt < 1;
   const w = img.width * sc, h = img.height * sc;
   let fx = a.rx * 16 + 8, fy = a.ry * 16 + 16;
   if ((a.kind === 'player' || a.kind === 'peer') && a.swingT && G.t - a.swingT < 140) { const d = DIRS[a.dir]; fx += d[0] * 2; fy += d[1] * 2; }
@@ -7251,6 +7338,13 @@ function drawActor(g, a, camPX, camPY, S, now) {
   g.beginPath();
   g.ellipse((fx - camPX) * S, (fy - 1.5 - camPY) * S, Math.max(4, w * 0.32) * S, 2.3 * S * sc, 0, 0, Math.PI * 2);
   g.fill();
+  const mountId = a.kind === 'player' || a.kind === 'peer' ? a.mount : null;
+  if (mountId && MOUNTS[mountId]) drawMount(g, mountId, fx, fy, camPX, camPY, S, now, moving, a.face);
+  const standId = a.kind === 'player' || a.kind === 'peer' ? a.stand : null;
+  if (standId && STANDS[standId]) {
+    g.save(); g.globalAlpha = 0.28; g.strokeStyle = STANDS[standId].c; g.lineWidth = 1.5 * S;
+    g.beginPath(); g.ellipse((fx - camPX) * S, (fy - 7 - camPY) * S, 12 * S, 15 * S, 0, 0, Math.PI * 2); g.stroke(); g.restore();
+  }
   let im = img;
   if (a.enraged > G.t) im = tintOf(img, '#ff3030', 0.35);
   else if (a.slowUntil > G.t) im = tintOf(img, '#5fb8ff', 0.4);
@@ -7262,6 +7356,17 @@ function drawActor(g, a, camPX, camPY, S, now) {
   if (a.flash > G.t) { g.globalAlpha = 0.72; g.drawImage(whiteOf(img), dx, dy, w * S, h * S); g.globalAlpha = 1; }
   if (a.boss && Math.random() < 0.3) G.parts.push({ x: a.rx + rndf(0, 1), y: a.ry + rndf(-0.6, 1), vx: rndf(-0.2, 0.2), vy: rndf(-1.2, -0.4), life: 700, max: 700, col: a.def.light ? '#ffb04a' : '#bd7bff', sz: 1, g: 0 });
   a._hx = (fx - camPX) * S; a._hy = dy + (a.kind === 'player' || a.kind === 'peer' || a.kind === 'npc' || (a.def && a.def.look.h) ? 3 * S * sc : 0);
+}
+function drawMount(g, id, fx, fy, camPX, camPY, S, now, moving, face) {
+  const M = MOUNTS[id]; if (!M) return;
+  const x = Math.round((fx - camPX) * S), y = Math.round((fy - 7 - camPY) * S);
+  const bob = moving ? Math.round(Math.sin(now / 85) * S) : 0;
+  g.save(); g.translate(x, y + bob); if (face < 0) { g.translate(20 * S, 0); g.scale(-1, 1); }
+  g.fillStyle = '#50351f'; g.fillRect(4 * S, 2 * S, 11 * S, 6 * S);
+  g.fillStyle = M.c; g.fillRect(3 * S, 3 * S, 12 * S, 5 * S); g.fillRect(12 * S, 1 * S, 5 * S, 4 * S);
+  g.fillStyle = shade(M.c, -0.24); g.fillRect(5 * S, 8 * S, 2 * S, 4 * S); g.fillRect(12 * S, 8 * S, 2 * S, 4 * S);
+  g.fillStyle = '#f1d7a2'; g.fillRect(16 * S, 1 * S, S, S); g.fillRect(2 * S, 3 * S, 2 * S, S);
+  g.restore();
 }
 function drawProj(g, pr, camPX, camPY, S) {
   const k = clamp((G.t - pr.t0) / pr.dur, 0, 1);
@@ -7975,7 +8080,7 @@ UI.init = () => {
   UI.hpb = bar('hp'); UI.mpb = bar('mp'); UI.xpb = bar('xp');
   me.querySelector('.bars').append(UI.hpb, UI.mpb, UI.xpb);
   // abas
-  const tabs = [['status', 'Status'], ['spells', 'Magias'], ['quests', 'Missões'], ['pesca', 'Pesca'], ['bestiary', 'Bestiário'], ['online', 'Online'], ['opts', 'Opções']];
+  const tabs = [['status', 'Status'], ['spells', 'Magias'], ['quests', 'Missões'], ['pesca', 'Pesca'], ['bestiary', 'Bestiário'], ['online', 'Online'], ['mounts', 'Montarias'], ['stands', 'Stands'], ['opts', 'Opções']];
   const nav = $('#tabs');
   for (const [k, n] of tabs) {
     const b = el('button', 'tab' + (k === UI.tab ? ' on' : ''), n); b.type = 'button'; b.dataset.t = k;
@@ -8003,6 +8108,7 @@ UI.init = () => {
   initTouch();
   buildTitle();
   $('#onlinebtn').addEventListener('click', (e) => { e.stopPropagation(); audioInit(); sfx('click'); UI.showOnline(); });
+  $('#sbrbtn').addEventListener('click', (e) => { e.stopPropagation(); sbrJoin(); });
   // depois de clicar num botão, o foco volta para o jogo (Espaço/Enter não "re-clicam" e WASD segue funcionando)
   document.addEventListener('click', (e) => {
     if (!G.started) return;
@@ -8349,6 +8455,61 @@ function renderTarget() {
 // ------------------------------------------------------------
 // abas
 // ------------------------------------------------------------
+function renderMountsTab(box) {
+  const p = G.p;
+  box.append(el('h4', null, 'Montarias'), el('p', 'hint', 'A corrida Steel Ball Run rende fichas. Montarias dão 20% mais velocidade fora de combate.'));
+  const tokens = el('div', 'kv'); tokens.append(el('span', null, 'Fichas da corrida'), el('b', null, fmt(p.eventTokens || 0))); box.appendChild(tokens);
+  const card = (id, M) => {
+    const r = el('div', 'quest' + (p.mount === id ? ' ready' : ''));
+    r.append(el('b', null, M.n), el('p', null, M.d), el('small', null, hasMount(p, id) ? (p.mount === id ? 'Equipado' : 'Na sua coleção') : 'Custa ' + M.price + ' fichas'));
+    const action = hasMount(p, id) ? btn(p.mount === id ? 'Desmontar' : 'Equipar', () => {
+      p.mount = p.mount === id ? null : id; G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
+    }, p.mount === id ? '' : 'pri') : btn('Resgatar', () => {
+      if ((p.eventTokens || 0) < M.price) return notice('Faltam fichas da corrida.', '#ff8a6a');
+      p.eventTokens -= M.price; p.mounts.push(id); p.mount = id; G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
+    }, 'pri');
+    r.appendChild(action); box.appendChild(r);
+  };
+  for (const [id, M] of Object.entries(MOUNTS)) card(id, M);
+}
+function renderStandsTab(box) {
+  const p = G.p;
+  box.append(el('h4', null, 'Stands'), el('p', 'hint', 'Equipe um stand para receber seu bônus passivo e usar sua habilidade ativa.'));
+  const tokens = el('div', 'kv'); tokens.append(el('span', null, 'Fichas da corrida'), el('b', null, fmt(p.eventTokens || 0))); box.appendChild(tokens);
+  for (const [id, S] of Object.entries(STANDS)) {
+    const r = el('div', 'quest' + (p.stand === id ? ' ready' : ''));
+    r.append(el('b', null, S.n), el('p', null, S.passive + ' · ' + S.ability), el('small', null, p.stands.includes(id) ? (p.stand === id ? 'Equipado' : 'Na sua coleção') : 'Custa ' + S.price + ' fichas'));
+    const action = p.stands.includes(id) ? btn(p.stand === id ? 'Desequipar' : 'Equipar', () => {
+      p.stand = p.stand === id ? null : id; calcStats(p); G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
+    }, p.stand === id ? '' : 'pri') : btn('Resgatar', () => {
+      if ((p.eventTokens || 0) < S.price) return notice('Faltam fichas da corrida.', '#ff8a6a');
+      p.eventTokens -= S.price; p.stands.push(id); p.stand = id; calcStats(p); G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
+    }, 'pri');
+    r.appendChild(action);
+    if (p.stand === id) r.appendChild(btn('Usar habilidade', useStandAbility, 'pri'));
+    box.appendChild(r);
+  }
+}
+function useStandAbility() {
+  const p = G.p, S = p && STANDS[p.stand];
+  if (!p || !S || !p.stands.includes(p.stand)) return notice('Equipe um stand primeiro.', '#c8b8a0');
+  if (p.dead || G.map.id === 'sbr') return notice('Essa habilidade não pode ser usada agora.', '#ff8a6a');
+  if (Date.now() < (p.standReadyAt || 0)) return notice('O stand ainda está se recuperando.', '#c8b8a0');
+  if (p.stand === 'bulwark') {
+    p.buffs.standGuard = G.t + 5000; addFx(p.x, p.y, 'holy');
+    notice('Bulwark protege você por 5 segundos.', '#a8f0d0');
+  } else if (p.stand === 'flare') {
+    if (G.map.pz[G.map.idx(p.x, p.y)]) return notice('Não é possível atacar em uma zona protegida.', '#ff8a6a');
+    const t = G.target && !G.target.dead && G.target.kind === 'mon' && cheb(p, G.target) <= 7 ? G.target : nearestHostile(7, true);
+    if (!t) return notice('Nenhum alvo ao alcance do Flare.', '#c8b8a0');
+    setTarget(t); playerHit(t, magicBase(1.8), 'energy', { fx: 'energy' }); netFx('energy', t.x, t.y, 0, 'energy');
+    notice('Flare atingiu ' + t.def.name + '.', '#ffd08a');
+  } else if (p.stand === 'mender') {
+    healPlayer(p.maxHp * 0.3); addFx(p.x, p.y, 'heal');
+    notice('Mender recuperou sua vida.', '#a8f0d0');
+  }
+  p.standReadyAt = Date.now() + S.cd; G.saveDirty = true; saveGame();
+}
 function renderTab(force) {
   const p = G.p, box = $('#tabbody');
   if (!p) return;
@@ -8439,6 +8600,10 @@ function renderTab(force) {
     box.appendChild(grid);
   } else if (UI.tab === 'online') {
     renderOnline(box);
+  } else if (UI.tab === 'mounts') {
+    renderMountsTab(box);
+  } else if (UI.tab === 'stands') {
+    renderStandsTab(box);
   } else if (UI.tab === 'pesca') {
     renderFishTab(box);
   } else if (UI.tab === 'opts') renderOpts(box);
@@ -10683,6 +10848,9 @@ function netPresence() {
     n: myNetName(), v: p.voc, l: p.lvl, m: p.map, x: p.x, y: p.y, d: p.dir, f: p.face, lk: p.look, eq: compactGear(p),
     h: Math.round(clamp(p.hp / p.maxHp, 0, 1) * 100), dd: p.dead ? 1 : 0, px: Math.floor(p.stats.killXp || 0),
   };
+  if (hasMount(p, p.mount)) pres.mt = p.mount;
+  if (p.stand && Array.isArray(p.stands) && p.stands.includes(p.stand) && STANDS[p.stand]) pres.sd = p.stand;
+  if (p.race && p.race.id) pres.sbr = { id: p.race.id, cp: p.race.cp | 0, joinedAt: p.race.joinedAt | 0, finishedAt: p.race.finishedAt | 0 };
   if (NET.say) pres.s = NET.say;
   if (NET.pt) pres.pt = NET.pt;
   const now = Date.now();
@@ -10742,6 +10910,10 @@ function onPeers(ch) {
     a.name = nm && !FILTER.badName(nm) ? nm : 'Aventureiro';
     a.by = pe.by || null; a.mkey = pe.by ? 'u:' + pe.by : 'p:' + pe.peer;
     a.voc = own(VOC, q.v) ? q.v : 'knight'; a.lvl = clamp(q.l | 0, 1, 999); a.map = own(MAPGEN, q.m) ? q.m : 'ov';
+    a.mount = MOUNTS[q.mt] ? q.mt : null; a.stand = STANDS[q.sd] ? q.sd : null;
+    a.race = q.sbr && typeof q.sbr.id === 'string' && /^sbr-[\w-]{1,80}$/.test(q.sbr.id)
+      ? { id: q.sbr.id, cp: clamp(q.sbr.cp | 0, 0, 4), joinedAt: Math.max(0, q.sbr.joinedAt | 0), finishedAt: Math.max(0, q.sbr.finishedAt | 0) }
+      : null;
     a.dir = clamp(q.d | 0, 0, 3); a.face = q.f < 0 ? -1 : 1; a.dead = !!q.dd; a.guest = !!pe.guest; a.mine = !!pe.isMe;
     a.hp = clamp(+q.h || 0, 0, 100); a.maxHp = 100;
     const key = JSON.stringify([look, gear]);
@@ -11117,9 +11289,93 @@ function safeGear(eq) {
   return out;
 }
 function netTickGuild() { guildPublish(); }
+function sbrRank() {
+  const p = G.p, id = p && p.race && p.race.id;
+  if (!id) return [];
+  const list = [{ id: NET.me || 'me', name: myNetName(), cp: p.race.cp | 0, finishedAt: p.race.finishedAt | 0, mine: true }];
+  for (const a of G.peers.values()) if (a.race && a.race.id === id) list.push({ id: a.peer, name: a.name || 'Aventureiro', cp: a.race.cp | 0, finishedAt: a.race.finishedAt | 0 });
+  return list.sort((a, b) => (a.finishedAt || Infinity) - (b.finishedAt || Infinity) || b.cp - a.cp);
+}
+function sbrHud() {
+  const b = $('#sbrbtn'); if (!b || !G.p || !G.started) { if (b) b.hidden = true; return; }
+  const ev = sbrEventAt(Date.now(), sbrServerId()), race = G.p.race;
+  if (!ev) { b.hidden = true; return; }
+  b.hidden = false;
+  const joined = race && race.id === ev.id;
+  const until = Math.max(0, ev.startAt - Date.now());
+  const text = joined
+    ? (race.finishedAt ? 'Chegada · ' + (sbrRank().findIndex((x) => x.mine) + 1) + 'º lugar' : 'Steel Ball Run · CP ' + race.cp + '/4 · ' + (sbrRank().findIndex((x) => x.mine) + 1) + 'º')
+    : (until > 0 ? 'Steel Ball Run · começa em ' + Math.ceil(until / 1000) + 's' : 'Steel Ball Run · entrar');
+  if (b.textContent !== text) b.textContent = text;
+  b.disabled = !joined && Date.now() >= ev.startAt;
+}
+function sbrJoin() {
+  const p = G.p, now = Date.now(), ev = sbrEventAt(now, sbrServerId());
+  if (!p || !G.started || p.dead) return notice('Entre no jogo com seu personagem primeiro.', '#ff8a6a');
+  if (!NET.room) return notice('Conecte-se a um servidor online para disputar com outras pessoas.', '#ff8a6a');
+  if (!ev || now >= ev.startAt) return notice('A janela de inscrição fechou. Volte na próxima Steel Ball Run.', '#ff8a6a');
+  if (p.race && p.race.id === ev.id) return notice('Você já está inscrito nesta corrida.', '#c8b8a0');
+  p.race = { id: ev.id, cp: 0, joinedAt: now, finishedAt: 0 };
+  mountDismount('a corrida começou');
+  changeMap('sbr', { a: 'start' });
+  NET.lastPres = ''; netPresence(); saveGame();
+  notice('Inscrito! A largada acontece em breve. Complete os 4 pontos e volte à faixa!', '#f3cd78');
+  sbrHud();
+}
+function sbrStep() {
+  const p = G.p, race = p && p.race;
+  if (!race || race.finishedAt || G.map.id !== 'sbr') return;
+  const ev = sbrEventAt(Date.now(), sbrServerId());
+  if (!ev || ev.id !== race.id || Date.now() < ev.startAt) return;
+  const cp = SBR_CHECKPOINTS[race.cp];
+  if (cp && Math.max(Math.abs(p.x - cp.x), Math.abs(p.y - cp.y)) <= 3) {
+    race.cp++; G.saveDirty = true; NET.lastPres = ''; netPresence();
+    notice('Ponto ' + race.cp + ' de 4!', '#f3cd78');
+  }
+  if (race.cp >= 4 && p.x >= 7 && p.x <= 14 && p.y >= 19 && p.y <= 27) sbrFinish();
+}
+function sbrFinish() {
+  const p = G.p, race = p && p.race;
+  if (!race || race.finishedAt) return;
+  race.finishedAt = Date.now(); G.saveDirty = true; NET.lastPres = ''; netPresence();
+  const rank = sbrRank().findIndex((x) => x.mine) + 1;
+  notice(rank === 1 ? 'Você cruzou a chegada em primeiro!' : 'Você cruzou a chegada em ' + rank + 'º lugar!', rank === 1 ? '#ffdc78' : '#a8f0d0');
+  sbrHud(); sbrAward(); saveGame();
+}
+function sbrAward() {
+  const p = G.p, race = p && p.race;
+  if (!race || !race.finishedAt || race.rewarded) return;
+  const ranked = sbrRank(), winner = ranked.length > 1 && ranked[0].mine;
+  if ((p.sbrRewards || []).includes(race.id)) { race.rewarded = true; return; }
+  p.eventTokens = Math.max(0, p.eventTokens | 0) + 1 + (winner ? 2 : 0);
+  p.sbrRewards = (p.sbrRewards || []).concat(race.id).slice(-30);
+  race.rewarded = true; G.saveDirty = true;
+  notice(winner ? 'Prêmio: 3 fichas (chegada em primeiro)!' : 'Prêmio: 1 ficha de participação.', '#f3cd78');
+  log(winner ? 'Steel Ball Run vencida: +3 fichas.' : 'Steel Ball Run concluída: +1 ficha.', 'sys');
+  NET.lastPres = ''; netPresence(); saveGame();
+}
+function sbrLeave() {
+  const p = G.p; if (!p || !p.race) return;
+  p.race = null; G.saveDirty = true; NET.lastPres = ''; netPresence();
+}
+function sbrTick() {
+  const p = G.p;
+  if (!p) return;
+  const now = Date.now(), ev = sbrEventAt(now, sbrServerId());
+  sbrHud();
+  if (!p.race) return;
+  if (!ev || ev.id !== p.race.id || p.dead) {
+    const wasOnTrack = G.map && G.map.id === 'sbr'; sbrLeave();
+    if (wasOnTrack && !p.dead) changeMap('ov', { a: 'hub' });
+    return;
+  }
+  if (G.map.id === 'sbr' && now >= ev.startAt) sbrStep();
+  if (p.race && p.race.finishedAt) sbrAward();
+}
 function netTick(dt) {
   netTickGuild();
   for (const a of G.peers.values()) advance(a, dt);
+  sbrTick();
   if (!NET.room) return;
   if (G.t - NET.presQ > 500) { NET.presQ = G.t; netPresence(); }
   if (NET.pt && G.t - (NET.ptT || 0) > 2000) { NET.ptT = G.t; partyCheck(); }

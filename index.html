@@ -2353,6 +2353,7 @@ M('sereia_coral', 'Sereia do Recife', 29, H({ skin: '#8ac8d8', hair: '#235b7a', 
 M('corsario_afogado', 'Corsário Afogado', 38, H({ skin: '#7d978e', hair: '#283d45', hairStyle: 4, shirt: '#344850', pants: '#28343c' }, { weapon: { type: 'sword', col: '#91b2bd' } }, { eye: '#8ffff0', scar: true }), { spd: 440, hpM: 1.25, dmgM: 1.15, loot: [['perola_marinha', 0.5, 1, 2], ['concha_colorida', 0.45, 1, 3]], res: { ice: 25, death: 20 } });
 M('leviata', 'Leviatã das Profundezas', 48, B({ t: 'dragon', c: '#17395a', c2: '#55c7d3', c3: '#b8f6e9', horn: '#fff0b0', fire: '#53c9db' }), { boss: true, sc: 1.7, spd: 500, hpM: 6, dmgM: 1.25, elem: 'ice', blood: 'green', loot: [['perola_marinha', 1, 5, 8], ['concha_colorida', 1, 5, 10], ['pedra_forja', 1, 2, 4]], res: { ice: 50, energy: 30, fire: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.35, cd: 8000, tele: 1100 }, { k: 'proj', elem: 'ice', mult: 1.5, cd: 2600 }, { k: 'heal', pct: 0.08, cd: 12000 }] });
 M('arraia_lunar', 'Arraia Lunar', 56, B({ t: 'fly', c: '#6954a8', c2: '#c7b8ff', c3: '#e6ddff', eye: '#fff0a8', manta: true }), { spd: 330, flyer: true, elem: 'energy', light: 2, loot: [['cristal_aurora', 0.55, 1, 2], ['essencia_tempestade', 0.25, 1, 1]], res: { energy: 35, ice: -20 } });
+M('rainha_nevoa', 'Matriarca das Nuvens', 74, B({ t: 'fly', c: '#5368a5', c2: '#d2f2ff', c3: '#f5ffff', eye: '#ffe88a', horn: '#fff0b0', manta: true }), { boss: true, sc: 1.9, spd: 420, hpM: 7, dmgM: 1.4, xpM: 9, elem: 'energy', light: 5, loot: [['cristal_aurora', 1, 7, 12], ['flor_lunar', 1, 4, 8], ['essencia_tempestade', 0.75, 2, 5]], res: { energy: 65, ice: 45, fire: -30 }, ab: [{ k: 'beam', elem: 'energy', len: 7, mult: 1.65, cd: 7000, tele: 1000 }, { k: 'nova', elem: 'ice', r: 2, mult: 1.4, cd: 9000, tele: 1150 }] });
 M('serpente_nuvem', 'Serpente das Nuvens', 63, B({ t: 'snake', c: '#a7d9e8', c2: '#6689d4', eye: '#fff3bd', hood: true }), { spd: 350, elem: 'ice', onHit: { k: 'slow', ch: 0.35 }, loot: [['cristal_aurora', 0.45, 1, 2], ['flor_lunar', 0.3, 1, 1]], res: { ice: 30, energy: 20, fire: -25 } });
 M('guardiao_marinho', 'Guardião das Marés', 70, H({ skin: '#6eb5ae', hair: '#193f5c', shirt: '#286b78', pants: '#173c58' }, { weapon: { type: 'spear', col: '#d8fff1' }, shield: { col: '#278b9b' }, body: { cls: 'h', col: '#286b78' }, helm: { cls: 'h', col: '#278b9b', plume: '#b8f6e9' } }, { eye: '#d8fff1' }), { spd: 440, hpM: 1.8, dmgM: 1.2, loot: [['essencia_tempestade', 0.5, 1, 2], ['concha_colorida', 0.45, 2, 4]], eq: 0.22, res: { ice: 35, phys: 20, energy: -20 } });
 M('sereia_abissal', 'Sereia Abissal', 78, H({ skin: '#7986ca', hair: '#241c55', hairStyle: 5, shirt: '#413477', pants: '#1c2d5c' }, { weapon: { type: 'wand', col: '#9a7cff' } }, { eye: '#ff92dd', horns: '#7ddcff', wings: '#5446a0', halo: true }), { spd: 400, range: 5, keep: 3, proj: 'death', elem: 'death', light: 2, loot: [['flor_lunar', 0.45, 1, 2], ['selo_caos', 0.18, 1, 1]], res: { death: 30, ice: 45, holy: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.25, cd: 8500, tele: 1000 }] });
@@ -3953,20 +3954,20 @@ Object.assign(WAYSTONES, {
   w_doce: { n: 'Vila Confeitada', m: 'doce', req: 10, realm: 'Dimensão Doce', d: 'Dimensão Doce — portal aberto' },
   w_cristal: { n: 'Refúgio Prismático', m: 'cristal', req: 40, realm: 'Dimensão Cristalina', d: 'Dimensão Cristalina — portal aberto' },
   w_vazio: { n: 'Observatório do Fim', m: 'vazio', req: 90, realm: 'Dimensão do Vazio', d: 'Dimensão do Vazio — portal aberto' },
-  w_nevoa: { n: 'Ilhas Nebulosas', m: 'mar', x: 105, y: 12, req: 55, realm: 'Ilhas Nebulosas', d: 'Baías altas e criaturas celestes.' },
-  w_vulcao: { n: 'Vulcão Coral', m: 'mar', x: 108, y: 52, req: 78, realm: 'Vulcão Coral', d: 'Recifes vulcânicos e o Titã da Tempestade.' },
-  w_coroa: { n: 'Coroa Celeste', m: 'mar', x: 137, y: 32, req: 108, realm: 'Coroa Celeste', d: 'O último arquipélago, lar do Kraken Ancestral.' },
+  w_nevoa: { n: 'Dimensão das Ilhas Nebulosas', m: 'nevoa', req: 55, realm: 'Dimensão Nebulosa', d: 'Ilhas flutuantes, criaturas da névoa e a Matriarca das Nuvens.' },
+  w_vulcao: { n: 'Dimensão do Vulcão Coral', m: 'vulcao', req: 78, realm: 'Dimensão Vulcânica', d: 'Recifes de magma e o Titã da Tempestade.' },
+  w_coroa: { n: 'Dimensão da Coroa Celeste', m: 'coroa', req: 108, realm: 'Dimensão Celeste', d: 'Arquipélago estelar protegido pelo Kraken Ancestral.' },
 });
 const DIMENSIONS = [
   { id: 'doce', way: 'w_doce', n: 'Dimensão Doce', req: 10, col: '#ff8ad0', d: 'Campos de açúcar, florestas de pirulito e um rio de chocolate cheio de peixes. Chefe: Rei Pudim.' },
   { id: 'cristal', way: 'w_cristal', n: 'Dimensão Cristalina', req: 40, col: '#b58cf0', d: 'Cavernas de cristal vivo e lagos prismáticos. Chefe: Prisma, a Rainha Espelhada.' },
   { id: 'vazio', way: 'w_vazio', n: 'Dimensão do Vazio', req: 90, col: '#6ff0ff', d: 'Ilhas soltas num mar de estrelas. Só os mais fortes voltam. Chefe: Nyx, Devoradora de Estrelas.' },
-  { id: 'nevoa', way: 'w_nevoa', n: 'Ilhas Nebulosas', req: 55, col: '#a8d9f2', zone: 45, d: 'Nível 55+. Arraias lunares e serpentes das nuvens.' },
-  { id: 'vulcao', way: 'w_vulcao', n: 'Vulcão Coral', req: 78, col: '#ff8654', zone: 46, d: 'Nível 78+. Magma vivo e o Titã da Tempestade.' },
-  { id: 'coroa', way: 'w_coroa', n: 'Coroa Celeste', req: 108, col: '#cba5ff', zone: 47, d: 'Nível 108+. Enfrente o Kraken Ancestral.' },
+  { id: 'nevoa', way: 'w_nevoa', n: 'Dimensão das Ilhas Nebulosas', req: 55, col: '#a8d9f2', d: 'Nível 55+. Explore ilhas flutuantes e enfrente a Matriarca das Nuvens.' },
+  { id: 'vulcao', way: 'w_vulcao', n: 'Dimensão do Vulcão Coral', req: 78, col: '#ff8654', d: 'Nível 78+. Atravesse os recifes de magma e derrote o Titã da Tempestade.' },
+  { id: 'coroa', way: 'w_coroa', n: 'Dimensão da Coroa Celeste', req: 108, col: '#cba5ff', d: 'Nível 108+. Conquiste o arquipélago e enfrente o Kraken Ancestral.' },
 ];
 // templos das dimensões ficam prontos só quando o mapa é gerado
-const TEMPLE_MAP = { ceu: 'ceu', abismo: 'abismo', doce: 'doce', cristal: 'cristal', vazio: 'vazio' };
+const TEMPLE_MAP = { ceu: 'ceu', abismo: 'abismo', doce: 'doce', cristal: 'cristal', vazio: 'vazio', nevoa: 'nevoa', vulcao: 'vulcao', coroa: 'coroa' };
 function templeFor(id) {
   if (!TEMPLES[id] && TEMPLE_MAP[id]) { try { getMap(TEMPLE_MAP[id]); } catch (e) { /* mapa indisponível */ } }
   return TEMPLES[id] || TEMPLES.aurora;
@@ -4110,7 +4111,7 @@ function genPraca() {
   for (let k = 0; k < 40; k++) { const x = rint(R, 2, 45), y = rint(R, 2, 35), i = m.idx(x, y); if (m.t[i] === T.GRASS && !m.o[i]) m.setO(x, y, R() < 0.6 ? O.FLOWER : O.BUSH, rint(R, 0, 250)); }
   // portal dimensional, pedra de viagem, depósitos e placas
   m.setO(21, 9, O.PORTAL);
-  addSign(m, 23, 10, 'Portal Dimensional: Doce (10), Cristalina (40), Vazio (90); Mar das Conchas: Ilhas Nebulosas (55), Vulcao Coral (78) e Coroa Celeste (108).');
+  addSign(m, 23, 10, 'Portal Dimensional: Praça das Trocas, Dimensão Doce, Dimensão Cristalina, Dimensão do Vazio, Dimensão Nebulosa, Dimensão Vulcânica e Dimensão Celeste.');
   setHub(m, 'w_praca', null, 14, 25);
   m.setO(9, 25, O.DEPOT); m.setO(10, 25, O.DEPOT);
   addSign(m, 12, 12, 'Praça das Trocas: clique em outro jogador e escolha Trocar. Anuncie o que você vende com a Leiloeira Bia.');
@@ -4282,8 +4283,68 @@ function genVazio() {
   return m;
 }
 
-Object.assign(MAPGEN, { praca: genPraca, doce: genDoce, cristal: genCristal, vazio: genVazio });
-Object.assign(MAPNAMES, { praca: 'Praça das Trocas', doce: 'Dimensão Doce', cristal: 'Dimensão Cristalina', vazio: 'Dimensão do Vazio' });
+function genSeaDimension(id) {
+  const D = {
+    nevoa: { name: 'Dimensão das Ilhas Nebulosas', zone: 45, floor: T.CLOUD, edge: T.CORAL, base: T.DEEP, seed: 4555, boss: 'rainha_nevoa', chest: 74, tint: 'rgba(145,205,255,0.09)', decor: [[O.CORAL, 4], [O.CLOUDPUFF, 4], [O.STARROCK, 2], [O.GLOWMUSH, 2], [O.PEBBLES, 1]] },
+    vulcao: { name: 'Dimensão do Vulcão Coral', zone: 46, floor: T.BASALT, edge: T.ASH, base: T.DEEP, seed: 4688, boss: 'tita_tempestade', chest: 100, tint: 'rgba(255,105,58,0.1)', decor: [[O.MAGMA_CRYSTAL, 4], [O.LAVAROCK, 3], [O.BURNT, 2], [O.CORAL, 1], [O.PEBBLES, 1]] },
+    coroa: { name: 'Dimensão da Coroa Celeste', zone: 47, floor: T.STARSTONE, edge: T.CLOUD, base: T.STARSEA, seed: 4713, boss: 'kraken_ancestral', chest: 140, tint: 'rgba(155,132,255,0.11)', decor: [[O.STAR_CRYSTAL, 4], [O.OBELISK, 2], [O.CRYSTAL, 2], [O.STARROCK, 3], [O.CLOUDPUFF, 1]] },
+  }[id];
+  if (!D) throw new Error('Dimensão marítima desconhecida: ' + id);
+  const W = 72, H = 72, R = mulberry32(D.seed);
+  const m = new GameMap(id, D.name, W, H, { daycycle: true, tint: D.tint, dark: id === 'coroa' ? 0.08 : 0 });
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = m.idx(x, y); m.setT(x, y, D.base); m.z[i] = D.zone; }
+  const islands = [
+    { x: 36, y: 55, rx: 14, ry: 10 },
+    { x: 18, y: 40, rx: 11, ry: 8 },
+    { x: 54, y: 33, rx: 12, ry: 9 },
+    { x: 36, y: 11, rx: 13, ry: 8 },
+  ];
+  for (const I of islands) for (let y = Math.max(2, I.y - I.ry - 2); y <= Math.min(H - 3, I.y + I.ry + 2); y++) for (let x = Math.max(2, I.x - I.rx - 2); x <= Math.min(W - 3, I.x + I.rx + 2); x++) {
+    const d = Math.sqrt(((x - I.x) / I.rx) ** 2 + ((y - I.y) / I.ry) ** 2) + (hash2(x, y, D.seed) - 0.5) * 0.12;
+    if (d > 1.08) continue;
+    m.setT(x, y, d > 0.82 ? D.edge : D.floor); m.z[m.idx(x, y)] = D.zone;
+  }
+  const bridge = (a, b) => {
+    const dx = b.x - a.x, dy = b.y - a.y, n = Math.max(Math.abs(dx), Math.abs(dy)), len = Math.hypot(dx, dy) || 1;
+    for (let k = 0; k <= n; k++) {
+      const t = k / Math.max(1, n), cx = a.x + dx * t, cy = a.y + dy * t;
+      for (let lane = -1; lane <= 1; lane++) {
+        const x = Math.round(cx - dy / len * lane), y = Math.round(cy + dx / len * lane);
+        if (m.inb(x, y)) { m.setT(x, y, D.floor); m.z[m.idx(x, y)] = D.zone; }
+      }
+    }
+  };
+  bridge({ x: 28, y: 49 }, { x: 24, y: 44 });
+  bridge({ x: 27, y: 39 }, { x: 43, y: 35 });
+  bridge({ x: 47, y: 29 }, { x: 41, y: 19 });
+  if (id === 'vulcao') {
+    circleDo(55, 33, 2.6, (x, y) => { if (x > 2 && y > 2 && x < W - 3 && y < H - 3) m.setT(x, y, T.LAVA); });
+    circleDo(18, 40, 1.8, (x, y) => { if (x > 2 && y > 2 && x < W - 3 && y < H - 3) m.setT(x, y, T.LAVA); });
+  }
+  const hub = { x: 36, y: 55 }, boss = { x: 36, y: 11 }, prot = new Uint8Array(W * H);
+  circleDo(hub.x, hub.y, 8, (x, y) => { const i = m.idx(x, y); m.pz[i] = 1; prot[i] = 1; });
+  protectAround(m, prot, boss.x, boss.y, 7);
+  for (let k = 0; k < 8; k++) {
+    const a = k * Math.PI / 4, x = Math.round(boss.x + Math.cos(a) * 6), y = Math.round(boss.y + Math.sin(a) * 5);
+    m.setO(x, y, id === 'nevoa' ? O.CORAL : id === 'vulcao' ? O.MAGMA_CRYSTAL : O.STAR_CRYSTAL);
+  }
+  setHub(m, 'w_' + id, id, hub.x, hub.y, hub.x, hub.y, D.name);
+  m.anchors.hub = hub; m.anchors.boss = boss;
+  addWarp(m, 41, 55, O.PORTAL, { m: 'praca', a: 'hub' }, 'retorno');
+  addSign(m, 34, 50, D.name + ' — entre pelo portal brilhante para voltar à Praça das Trocas.');
+  if (id === 'nevoa') { addSign(m, 28, 16, 'A Matriarca das Nuvens vigia o santuário ao norte.'); addChest(m, boss.x, boss.y + 5, 'gold', D.chest); }
+  else if (id === 'vulcao') { addSign(m, 28, 16, 'O Titã da Tempestade repousa entre as chamas.'); addChest(m, boss.x, boss.y + 5, 'gold', D.chest); }
+  else { addSign(m, 28, 16, 'O Kraken Ancestral guarda a Coroa Celeste.'); addChest(m, boss.x, boss.y + 5, 'gold', D.chest); }
+  m.spawns.push({ mon: D.boss, x: boss.x, y: boss.y, boss: true });
+  scatterDeco(m, R, prot, [D.floor, D.edge], D.decor, 0.075);
+  randomChests(m, R, prot, 6, D.chest - 22, D.chest);
+  zoneSpawns(m, R, prot);
+  pruneSpawns(m, hub);
+  return m;
+}
+
+Object.assign(MAPGEN, { praca: genPraca, doce: genDoce, cristal: genCristal, vazio: genVazio, nevoa: () => genSeaDimension('nevoa'), vulcao: () => genSeaDimension('vulcao'), coroa: () => genSeaDimension('coroa') });
+Object.assign(MAPNAMES, { praca: 'Praça das Trocas', doce: 'Dimensão Doce', cristal: 'Dimensão Cristalina', vazio: 'Dimensão do Vazio', nevoa: 'Dimensão das Ilhas Nebulosas', vulcao: 'Dimensão do Vulcão Coral', coroa: 'Dimensão da Coroa Celeste' });
 
 // ------------------------------------------------------------
 // MAR DAS CONCHAS — ilhas, cais, tesouros e fauna marinha
@@ -4304,17 +4365,13 @@ function genSea() {
   island(37, 13, 12, 9, 41, false);
   island(47, 43, 14, 11, 42, false);
   island(76, 30, 12, 13, 43, false);
-  island(105, 12, 12, 9, 45, false, T.CORAL);
-  island(108, 52, 14, 11, 46, false, T.BASALT);
-  island(137, 32, 13, 16, 47, false, T.STARSTONE);
+
   // Píer do porto e cais que ligam os três pontos de exploração.
   fillRect(m, 4, 31, 6, 3, T.DOCK); fillRect(m, 16, 31, 6, 3, T.DOCK);
   fillRect(m, 27, 18, 5, 3, T.DOCK); fillRect(m, 42, 17, 5, 3, T.DOCK);
   fillRect(m, 35, 33, 5, 3, T.DOCK); fillRect(m, 54, 42, 5, 3, T.DOCK);
   fillRect(m, 62, 31, 5, 3, T.DOCK);
-  fillRect(m, 84, 27, 5, 3, T.DOCK); fillRect(m, 94, 15, 5, 3, T.DOCK);
-  fillRect(m, 110, 16, 5, 3, T.DOCK); fillRect(m, 95, 47, 5, 3, T.DOCK);
-  fillRect(m, 116, 50, 5, 3, T.DOCK); fillRect(m, 125, 34, 5, 3, T.DOCK);
+  fillRect(m, 84, 27, 5, 3, T.DOCK);
   addWarp(m, 7, 32, O.STAIRS_UP, { m: 'praca', a: 'hub' }, 'volta');
   addWarp(m, 19, 32, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'porto');
   addWarp(m, 29, 19, O.STAIRS_UP, { m: 'mar', a: 'porto' }, 'recife_volta');
@@ -4322,34 +4379,22 @@ function genSea() {
   addWarp(m, 37, 34, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'nau_volta');
   addWarp(m, 57, 43, O.STAIRS_UP, { m: 'mar', a: 'fenda' }, 'nau');
   addWarp(m, 64, 32, O.STAIRS_UP, { m: 'mar', a: 'nau' }, 'fenda');
-  addWarp(m, 86, 28, O.STAIRS_UP, { m: 'mar', a: 'nevoa' }, 'fenda_nevoa');
-  addWarp(m, 96, 16, O.STAIRS_UP, { m: 'mar', a: 'fenda' }, 'nevoa_fenda');
-  addWarp(m, 113, 17, O.STAIRS_UP, { m: 'mar', a: 'vulcao' }, 'nevoa_vulcao');
-  addWarp(m, 97, 48, O.STAIRS_UP, { m: 'mar', a: 'nevoa' }, 'vulcao_nevoa');
-  addWarp(m, 119, 52, O.STAIRS_UP, { m: 'mar', a: 'torre' }, 'vulcao_torre');
-  addWarp(m, 128, 35, O.STAIRS_UP, { m: 'mar', a: 'vulcao' }, 'torre_vulcao');
+  addWarp(m, 86, 28, O.STAIRS_UP, { m: 'nevoa', a: 'hub' }, 'fenda_nevoa');
   m.anchors.hub = { x: 12, y: 32 };
-  m.anchors.fenda = { x: 64, y: 32 }; m.anchors.nevoa = { x: 96, y: 16 };
-  m.anchors.vulcao = { x: 97, y: 48 }; m.anchors.torre = { x: 128, y: 35 };
+  m.anchors.fenda = { x: 64, y: 32 };
   addSign(m, 10, 28, 'Mar das Conchas: explore os cais, abra os baús e procure a Pérola do Leviatã. Recife recomendado: nível 20+.');
   addSign(m, 34, 11, 'Recife Azul — criaturas marinhas e baús de conchas.');
   addSign(m, 44, 40, 'Naufrágio Esquecido — corsários afogados protegem os tesouros.');
   addSign(m, 73, 26, 'Fenda das Profundezas — o Leviatã desperta nas águas escuras.');
-  addSign(m, 101, 8, 'Ilhas Nebulosas: nível 55+. A Arraia Lunar espreita nos céus.');
-  addSign(m, 103, 47, 'Vulcão Coral: nível 78+. Cuidado com o Titã da Tempestade!');
-  addSign(m, 133, 27, 'Coroa Celeste: nível 108+. O Kraken Ancestral protege o tesouro.');
+  addSign(m, 83, 25, 'A fenda abre um portal para a Dimensão das Ilhas Nebulosas.');
   for (const [x, y] of [[9, 24], [16, 26], [8, 39], [17, 39]]) m.setO(x, y, O.PALM);
   for (const [x, y] of [[35, 10], [39, 14], [32, 15], [42, 12], [45, 44], [50, 40]]) m.setO(x, y, O.SHELL);
-  for (const [x, y] of [[101, 10], [108, 8], [111, 13]]) m.setO(x, y, O.CORAL);
-  for (const [x, y] of [[103, 52], [112, 55], [116, 47]]) m.setO(x, y, O.MAGMA_CRYSTAL);
-  for (const [x, y] of [[134, 27], [141, 33], [146, 40]]) m.setO(x, y, O.STAR_CRYSTAL);
+
   for (const [x, y] of [[42, 43], [49, 45], [52, 40], [55, 44]]) m.setO(x, y, O.BARREL);
   addChest(m, 12, 35, 'wood', 20); addChest(m, 35, 13, 'wood', 24); addChest(m, 40, 12, 'gold', 28);
   addChest(m, 46, 45, 'wood', 34); addChest(m, 52, 41, 'gold', 38); addChest(m, 74, 34, 'gold', 46);
-  addChest(m, 102, 14, 'wood', 58); addChest(m, 110, 11, 'gold', 66);
-  addChest(m, 105, 56, 'wood', 82); addChest(m, 114, 49, 'gold', 94);
-  addChest(m, 135, 37, 'gold', 118); addChest(m, 143, 29, 'gold', 132);
-  m.spawns.push({ mon: 'leviata', x: 77, y: 27, boss: true }, { mon: 'tita_tempestade', x: 109, y: 56, boss: true }, { mon: 'kraken_ancestral', x: 140, y: 38, boss: true });
+
+  m.spawns.push({ mon: 'leviata', x: 77, y: 27, boss: true });
   return m;
 }
 MAPGEN.mar = genSea;
@@ -6430,7 +6475,11 @@ function startGame(p) {
   G.p = p;
   ACT.set(p.id, p);
   getMap('ov');
-  const pos = p.savedPos || { m: 'ov', x: TEMPLES.aurora.x, y: TEMPLES.aurora.y };
+  let pos = p.savedPos || { m: 'ov', x: TEMPLES.aurora.x, y: TEMPLES.aurora.y };
+  if (pos.m === 'mar') {
+    const oldRealm = pos.x >= 93 && pos.x <= 117 && pos.y >= 2 && pos.y <= 22 ? 'nevoa' : pos.x >= 94 && pos.x <= 122 && pos.y >= 39 && pos.y <= 65 ? 'vulcao' : pos.x >= 124 && pos.x <= 150 && pos.y >= 16 && pos.y <= 48 ? 'coroa' : null;
+    if (oldRealm) pos = { m: oldRealm, x: 36, y: 56 };
+  }
   G.map = null;
   if (pos.m !== 'ov' && !G.maps[pos.m]) getMap(pos.m);
   for (const id in G.maps) restoreMapState(G.maps[id]);
@@ -10006,9 +10055,9 @@ const PORTAL_DESTS = [
   { id: 'doce', pv: { floor: ['CANDY', 'CREAM', 'CHOCO'], objs: ['LOLLIPOP', 'CUPCAKE', 'CANDYCANE'] } },
   { id: 'cristal', pv: { floor: ['CRYSF', 'CRYSF', 'PRISM'], objs: ['SPIRE', 'CRYSTALTREE', 'CRYSTAL'] } },
   { id: 'vazio', pv: { floor: ['VOIDF', 'VOIDF', 'STARSEA'], objs: ['VOIDTREE', 'OBELISK', 'STARROCK'] } },
-  { id: 'nevoa', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['SHELL', 'PALM', 'STARROCK'] } },
-  { id: 'vulcao', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['BARREL', 'SHELL', 'STARROCK'] } },
-  { id: 'coroa', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['STARROCK', 'SHELL', 'PALM'] } },
+  { id: 'nevoa', pv: { floor: ['CLOUD', 'CORAL', 'DEEP'], objs: ['CLOUDPUFF', 'CORAL', 'STARROCK'] } },
+  { id: 'vulcao', pv: { floor: ['BASALT', 'ASH', 'LAVA'], objs: ['LAVAROCK', 'MAGMA_CRYSTAL', 'BURNT'] } },
+  { id: 'coroa', pv: { floor: ['STARSTONE', 'CLOUD', 'STARSEA'], objs: ['STAR_CRYSTAL', 'OBELISK', 'STARROCK'] } },
   { id: 'ov', way: 'w_aurora', n: 'Vila Aurora', req: 1, col: '#7fd35a', d: 'De volta ao continente de Quadria.', pv: { floor: ['GRASS', 'COBBLE', 'WATER'], objs: ['OAK', 'WELL', 'FLOWER'] } },
 ];
 function portalDest(D) { const X = DIMENSIONS.find((x) => x.id === D.id); return X ? Object.assign({}, X, D) : D; }
@@ -10037,17 +10086,17 @@ UI.openDimensions = () => {
   const p = G.p;
   if (!p) return;
   const b = openWin('portal', 'Portal Dimensional', { wide: true });
-  b.appendChild(el('p', 'hint', 'Escolha o destino. Os destinos distantes exigem nivel minimo. As tres ilhas novas ficam no Mar das Conchas.'));
+  b.appendChild(el('p', 'hint', 'Escolha uma dimensão para visitar. Algumas exigem nível mínimo; cada uma tem seu próprio mapa e portal de volta.'));
   const grid = el('div', 'dimgrid');
   for (const D0 of PORTAL_DESTS) {
     const D = portalDest(D0);
     if (D.id === 'ov' && G.map.id === 'ov') continue;
-    const here = D.zone ? G.map.id === 'mar' && G.map.z[G.map.idx(p.x, p.y)] === D.zone : G.map.id === D.id; const lock = p.lvl < D.req;
+    const here = G.map.id === D.id; const lock = p.lvl < D.req;
     const card = el('div', 'dimc' + (lock ? ' lock' : '') + (here ? ' here' : ''));
     card.style.setProperty('--dc', D.col);
     const im = el('img', 'dimpv'); im.alt = ''; im.src = portalPreview(D);
     card.append(im, el('b', null, D.n), el('small', 'dimreq', D.req > 1 ? 'Nível ' + D.req + '+' : 'Todos os níveis'), el('p', null, D.d));
-    const sea = G.maps.mar; const n = [...G.peers.values()].filter((a) => a.map === D.id || (D.zone && a.map === 'mar' && sea && sea.inb(a.x, a.y) && sea.z[sea.idx(a.x, a.y)] === D.zone)).length;
+    const n = [...G.peers.values()].filter((a) => a.map === D.id).length;
     if (n) card.appendChild(el('small', 'dimon', n + (n === 1 ? ' jogador lá agora' : ' jogadores lá agora')));
     if (here) card.appendChild(el('small', 'here', 'Você está aqui'));
     else if (lock) card.appendChild(el('small', 'lockt', 'Selado até o nível ' + D.req));

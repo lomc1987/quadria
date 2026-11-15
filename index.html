@@ -3932,11 +3932,17 @@ Object.assign(WAYSTONES, {
   w_doce: { n: 'Vila Confeitada', m: 'doce', req: 10, realm: 'Dimensão Doce', d: 'Dimensão Doce — portal aberto' },
   w_cristal: { n: 'Refúgio Prismático', m: 'cristal', req: 40, realm: 'Dimensão Cristalina', d: 'Dimensão Cristalina — portal aberto' },
   w_vazio: { n: 'Observatório do Fim', m: 'vazio', req: 90, realm: 'Dimensão do Vazio', d: 'Dimensão do Vazio — portal aberto' },
+  w_nevoa: { n: 'Ilhas Nebulosas', m: 'mar', x: 105, y: 12, req: 55, realm: 'Ilhas Nebulosas', d: 'Baías altas e criaturas celestes.' },
+  w_vulcao: { n: 'Vulcão Coral', m: 'mar', x: 108, y: 52, req: 78, realm: 'Vulcão Coral', d: 'Recifes vulcânicos e o Titã da Tempestade.' },
+  w_coroa: { n: 'Coroa Celeste', m: 'mar', x: 137, y: 32, req: 108, realm: 'Coroa Celeste', d: 'O último arquipélago, lar do Kraken Ancestral.' },
 });
 const DIMENSIONS = [
   { id: 'doce', way: 'w_doce', n: 'Dimensão Doce', req: 10, col: '#ff8ad0', d: 'Campos de açúcar, florestas de pirulito e um rio de chocolate cheio de peixes. Chefe: Rei Pudim.' },
   { id: 'cristal', way: 'w_cristal', n: 'Dimensão Cristalina', req: 40, col: '#b58cf0', d: 'Cavernas de cristal vivo e lagos prismáticos. Chefe: Prisma, a Rainha Espelhada.' },
   { id: 'vazio', way: 'w_vazio', n: 'Dimensão do Vazio', req: 90, col: '#6ff0ff', d: 'Ilhas soltas num mar de estrelas. Só os mais fortes voltam. Chefe: Nyx, Devoradora de Estrelas.' },
+  { id: 'nevoa', way: 'w_nevoa', n: 'Ilhas Nebulosas', req: 55, col: '#a8d9f2', zone: 45, d: 'Nível 55+. Arraias lunares e serpentes das nuvens.' },
+  { id: 'vulcao', way: 'w_vulcao', n: 'Vulcão Coral', req: 78, col: '#ff8654', zone: 46, d: 'Nível 78+. Magma vivo e o Titã da Tempestade.' },
+  { id: 'coroa', way: 'w_coroa', n: 'Coroa Celeste', req: 108, col: '#cba5ff', zone: 47, d: 'Nível 108+. Enfrente o Kraken Ancestral.' },
 ];
 // templos das dimensões ficam prontos só quando o mapa é gerado
 const TEMPLE_MAP = { ceu: 'ceu', abismo: 'abismo', doce: 'doce', cristal: 'cristal', vazio: 'vazio' };
@@ -4083,7 +4089,7 @@ function genPraca() {
   for (let k = 0; k < 40; k++) { const x = rint(R, 2, 45), y = rint(R, 2, 35), i = m.idx(x, y); if (m.t[i] === T.GRASS && !m.o[i]) m.setO(x, y, R() < 0.6 ? O.FLOWER : O.BUSH, rint(R, 0, 250)); }
   // portal dimensional, pedra de viagem, depósitos e placas
   m.setO(21, 9, O.PORTAL);
-  addSign(m, 23, 10, 'Portal Dimensional: Dimensão Doce (nível 10), Cristalina (nível 40) e do Vazio (nível 90).');
+  addSign(m, 23, 10, 'Portal Dimensional: Doce (10), Cristalina (40), Vazio (90); Mar das Conchas: Ilhas Nebulosas (55), Vulcao Coral (78) e Coroa Celeste (108).');
   setHub(m, 'w_praca', null, 14, 25);
   m.setO(9, 25, O.DEPOT); m.setO(10, 25, O.DEPOT);
   addSign(m, 12, 12, 'Praça das Trocas: clique em outro jogador e escolha Trocar. Anuncie o que você vende com a Leiloeira Bia.');
@@ -9976,6 +9982,9 @@ const PORTAL_DESTS = [
   { id: 'doce', pv: { floor: ['CANDY', 'CREAM', 'CHOCO'], objs: ['LOLLIPOP', 'CUPCAKE', 'CANDYCANE'] } },
   { id: 'cristal', pv: { floor: ['CRYSF', 'CRYSF', 'PRISM'], objs: ['SPIRE', 'CRYSTALTREE', 'CRYSTAL'] } },
   { id: 'vazio', pv: { floor: ['VOIDF', 'VOIDF', 'STARSEA'], objs: ['VOIDTREE', 'OBELISK', 'STARROCK'] } },
+  { id: 'nevoa', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['SHELL', 'PALM', 'STARROCK'] } },
+  { id: 'vulcao', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['BARREL', 'SHELL', 'STARROCK'] } },
+  { id: 'coroa', pv: { floor: ['GRASS', 'DOCK', 'DEEP'], objs: ['STARROCK', 'SHELL', 'PALM'] } },
   { id: 'ov', way: 'w_aurora', n: 'Vila Aurora', req: 1, col: '#7fd35a', d: 'De volta ao continente de Quadria.', pv: { floor: ['GRASS', 'COBBLE', 'WATER'], objs: ['OAK', 'WELL', 'FLOWER'] } },
 ];
 function portalDest(D) { const X = DIMENSIONS.find((x) => x.id === D.id); return X ? Object.assign({}, X, D) : D; }
@@ -10004,17 +10013,17 @@ UI.openDimensions = () => {
   const p = G.p;
   if (!p) return;
   const b = openWin('portal', 'Portal Dimensional', { wide: true });
-  b.appendChild(el('p', 'hint', 'Escolha o destino. As dimensões exigem nível mínimo; a Praça das Trocas é aberta para todos. Cada dimensão tem sua vila com templo, depósito, loja e pescador.'));
+  b.appendChild(el('p', 'hint', 'Escolha o destino. Os destinos distantes exigem nivel minimo. As tres ilhas novas ficam no Mar das Conchas.'));
   const grid = el('div', 'dimgrid');
   for (const D0 of PORTAL_DESTS) {
     const D = portalDest(D0);
     if (D.id === 'ov' && G.map.id === 'ov') continue;
-    const here = G.map.id === D.id, lock = p.lvl < D.req;
+    const here = D.zone ? G.map.id === 'mar' && G.map.z[G.map.idx(p.x, p.y)] === D.zone : G.map.id === D.id; const lock = p.lvl < D.req;
     const card = el('div', 'dimc' + (lock ? ' lock' : '') + (here ? ' here' : ''));
     card.style.setProperty('--dc', D.col);
     const im = el('img', 'dimpv'); im.alt = ''; im.src = portalPreview(D);
     card.append(im, el('b', null, D.n), el('small', 'dimreq', D.req > 1 ? 'Nível ' + D.req + '+' : 'Todos os níveis'), el('p', null, D.d));
-    const n = [...G.peers.values()].filter((a) => a.map === D.id).length;
+    const sea = G.maps.mar; const n = [...G.peers.values()].filter((a) => a.map === D.id || (D.zone && a.map === 'mar' && sea && sea.inb(a.x, a.y) && sea.z[sea.idx(a.x, a.y)] === D.zone)).length;
     if (n) card.appendChild(el('small', 'dimon', n + (n === 1 ? ' jogador lá agora' : ' jogadores lá agora')));
     if (here) card.appendChild(el('small', 'here', 'Você está aqui'));
     else if (lock) card.appendChild(el('small', 'lockt', 'Selado até o nível ' + D.req));

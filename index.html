@@ -2331,12 +2331,25 @@ M('caranguejo_coral', 'Caranguejo de Coral', 22, B({ t: 'slime', c: '#e86b5b', c
 M('sereia_coral', 'Sereia do Recife', 29, H({ skin: '#8ac8d8', hair: '#235b7a', hairStyle: 2, shirt: '#54aab2', pants: '#28687a' }, {}, { eye: '#c8f8ff' }), { spd: 480, range: 4, keep: 2, proj: 'ice', elem: 'ice', loot: [['perola_marinha', 0.4, 1, 1], ['concha_colorida', 0.35, 1, 2]], res: { ice: 45, fire: -20 } });
 M('corsario_afogado', 'Corsário Afogado', 38, H({ skin: '#7d978e', hair: '#283d45', hairStyle: 4, shirt: '#344850', pants: '#28343c' }, { weapon: { type: 'sword', col: '#91b2bd' } }, { eye: '#8ffff0', scar: true }), { spd: 440, hpM: 1.25, dmgM: 1.15, loot: [['perola_marinha', 0.5, 1, 2], ['concha_colorida', 0.45, 1, 3]], res: { ice: 25, death: 20 } });
 M('leviata', 'Leviatã das Profundezas', 48, B({ t: 'dragon', c: '#17395a', c2: '#55c7d3', c3: '#b8f6e9', horn: '#fff0b0', fire: '#53c9db' }), { boss: true, sc: 1.7, spd: 500, hpM: 6, dmgM: 1.25, elem: 'ice', blood: 'green', loot: [['perola_marinha', 1, 5, 8], ['concha_colorida', 1, 5, 10], ['pedra_forja', 1, 2, 4]], res: { ice: 50, energy: 30, fire: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.35, cd: 8000, tele: 1100 }, { k: 'proj', elem: 'ice', mult: 1.5, cd: 2600 }, { k: 'heal', pct: 0.08, cd: 12000 }] });
+M('arraia_lunar', 'Arraia Lunar', 56, B({ t: 'fly', c: '#6954a8', c2: '#c7b8ff', eye: '#fff0a8' }), { spd: 330, flyer: true, elem: 'energy', light: 2, loot: [['cristal_aurora', 0.55, 1, 2], ['essencia_tempestade', 0.25, 1, 1]], res: { energy: 35, ice: -20 } });
+M('serpente_nuvem', 'Serpente das Nuvens', 63, B({ t: 'snake', c: '#a7d9e8', c2: '#6689d4', eye: '#fff3bd' }), { spd: 350, elem: 'ice', onHit: { k: 'slow', ch: 0.35 }, loot: [['cristal_aurora', 0.45, 1, 2], ['flor_lunar', 0.3, 1, 1]], res: { ice: 30, energy: 20, fire: -25 } });
+M('guardiao_marinho', 'Guardião das Marés', 70, H({ skin: '#6eb5ae', hair: '#193f5c', shirt: '#286b78', pants: '#173c58' }, { weapon: { type: 'spear', col: '#d8fff1' }, shield: { col: '#278b9b' }, body: { cls: 'h', col: '#286b78' }, helm: { cls: 'h', col: '#278b9b', plume: '#b8f6e9' } }, { eye: '#d8fff1' }), { spd: 440, hpM: 1.8, dmgM: 1.2, loot: [['essencia_tempestade', 0.5, 1, 2], ['concha_colorida', 0.45, 2, 4]], eq: 0.22, res: { ice: 35, phys: 20, energy: -20 } });
+M('sereia_abissal', 'Sereia Abissal', 78, H({ skin: '#7986ca', hair: '#241c55', hairStyle: 5, shirt: '#413477', pants: '#1c2d5c' }, { weapon: { type: 'wand', col: '#9a7cff' } }, { eye: '#ff92dd', horns: '#7ddcff', wings: '#5446a0', halo: true }), { spd: 400, range: 5, keep: 3, proj: 'death', elem: 'death', light: 2, loot: [['flor_lunar', 0.45, 1, 2], ['selo_caos', 0.18, 1, 1]], res: { death: 30, ice: 45, holy: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.25, cd: 8500, tele: 1000 }] });
+M('caranguejo_magma', 'Caranguejo de Magma', 84, B({ t: 'scorp', c: '#a53d2d', c2: '#ff9f45', eye: '#fff0a8' }), { spd: 470, hpM: 2, onHit: { k: 'burn', ch: 0.28 }, loot: [['chama_solar', 0.5, 1, 2], ['pedra_forja', 0.14, 1, 1]], res: { fire: 65, phys: 25, ice: -35 } });
+M('golem_vulcanico', 'Golem Vulcânico', 92, H({ skin: '#653b39', shirt: '#8c3928', pants: '#422a36' }, {}, { golem: true, noHair: true, eye: '#ffe066', core: '#ff693d', horns: '#382638' }), { spd: 590, hpM: 2.8, dmgM: 1.4, blood: 'dust', light: 3, loot: [['chama_solar', 0.65, 1, 3], ['selo_caos', 0.2, 1, 1]], res: { fire: 70, phys: 40, ice: -35 }, ab: [{ k: 'nova', elem: 'fire', r: 2, mult: 1.4, cd: 9000, tele: 1100 }] });
+M('tita_tempestade', 'Titã da Tempestade', 98, B({ t: 'dragon', c: '#324f7c', c2: '#73d7ef', c3: '#b9f6ff', horn: '#fff0a8', fire: '#91eaff' }), { boss: true, sc: 2, spd: 500, hpM: 9, dmgM: 1.5, xpM: 14, elem: 'energy', light: 6, loot: [['cristal_aurora', 1, 8, 16], ['essencia_tempestade', 1, 6, 12], ['u_sabre_temporal', 0.45, 1, 1], ['u_escudo_cometa', 0.3, 1, 1], ['pedra_forja', 1, 4, 7]], res: { energy: 65, ice: 40, earth: -30 }, ab: [{ k: 'beam', elem: 'energy', len: 8, mult: 1.75, cd: 6500, tele: 950 }, { k: 'meteor', elem: 'energy', n: 6, mult: 1.4, cd: 10000 }, { k: 'heal', pct: 0.1, cd: 13000 }] });
+M('oraculo_celeste', 'Oráculo Celeste', 112, H({ skin: '#ddc5ff', hair: '#80e7ff', hairStyle: 2, shirt: '#433d85', pants: '#242454' }, { weapon: { type: 'staff', col: '#80e7ff' }, body: { cls: 'l', col: '#433d85' } }, { eye: '#fff0a8', wings: '#91eaff', halo: true }), { spd: 370, range: 6, keep: 3, proj: 'energy', elem: 'energy', light: 4, loot: [['cristal_aurora', 0.6, 2, 4], ['flor_lunar', 0.4, 1, 2]], eq: 0.34, res: { energy: 55, death: -20 }, ab: [{ k: 'beam', elem: 'energy', len: 8, mult: 1.6, cd: 7500, tele: 1000 }, { k: 'tp', cd: 9500 }] });
+M('dragao_marinho', 'Dragão do Mar Astral', 124, B({ t: 'dragon', c: '#17395a', c2: '#42c7d1', c3: '#d8fff1', horn: '#a6f2ff', fire: '#7de6ff' }), { spd: 440, hpM: 3.2, dmgM: 1.45, xpM: 2.5, elem: 'ice', light: 4, loot: [['essencia_tempestade', 0.7, 2, 5], ['chama_solar', 0.35, 1, 3], ['diamante', 0.16, 1, 2]], eq: 0.4, res: { ice: 65, energy: 45, fire: -30 }, ab: [{ k: 'beam', elem: 'ice', len: 8, mult: 1.7, cd: 7000, tele: 900 }, { k: 'nova', elem: 'ice', r: 3, mult: 1.5, cd: 10000, tele: 1200 }] });
+M('kraken_ancestral', 'Kraken Ancestral', 138, B({ t: 'elem', c: '#182b54', c2: '#465bc1', c3: '#91edff', spark: '#fff0a8' }), { boss: true, sc: 2.1, spd: 480, hpM: 12, dmgM: 1.7, xpM: 18, range: 5, keep: 3, proj: 'death', elem: 'death', blood: 'green', light: 7, loot: [['nucleo_vazio', 1, 6, 12], ['essencia_tempestade', 1, 8, 18], ['u_orbe_caos', 0.45, 1, 1], ['u_corona_mar', 0.4, 1, 1], ['caixa_caos', 0.65, 1, 2], ['pedra_forja', 1, 6, 10]], res: { death: 65, ice: 35, holy: -35 }, ab: [{ k: 'nova', elem: 'death', r: 3, mult: 1.65, cd: 8500, tele: 1200 }, { k: 'meteor', elem: 'ice', n: 8, mult: 1.5, cd: 12000 }, { k: 'heal', pct: 0.12, cd: 14000 }] });
 addItem({ id: 'perola_marinha', name: 'Pérola Marinha', cat: 'mat', stack: true, value: 90, icon: ['gem', '#8fe9e6'] });
 addItem({ id: 'concha_colorida', name: 'Concha Colorida', cat: 'mat', stack: true, value: 32, icon: ['shell', '#ff9bc5'] });
 addItem({ id: 'fragmento_cometa', name: 'Fragmento de Cometa', cat: 'mat', stack: true, value: 240, icon: ['gem', '#ffb45c'] });
 addItem({ id: 'essencia_tempestade', name: 'Essência da Tempestade', cat: 'mat', stack: true, value: 360, icon: ['dust', '#7edfff'] });
 addItem({ id: 'selo_caos', name: 'Selo do Caos', cat: 'mat', stack: true, value: 500, icon: ['heart', '#d982ff'] });
 addItem({ id: 'caixa_caos', name: 'Caixa do Caos', cat: 'mat', stack: true, value: 1200, icon: ['crown', '#ffcf5a'] });
+addItem({ id: 'cristal_aurora', name: 'Cristal da Aurora', cat: 'mat', stack: true, value: 430, icon: ['gem', '#9fe8f5'] });
+addItem({ id: 'flor_lunar', name: 'Flor Lunar', cat: 'mat', stack: true, value: 520, icon: ['heart', '#c8a6ff'] });
+addItem({ id: 'chama_solar', name: 'Chama Solar', cat: 'mat', stack: true, value: 640, icon: ['gem', '#ff8b47'] });
 
 // materiais das dimensões
 [
@@ -3910,6 +3923,9 @@ Object.assign(ZONES, {
   42: { n: 'Naufrágio Esquecido', lv: [30, 42], mons: [['corsario_afogado', 4], ['sereia_coral', 2]], dens: 1 / 36 },
   43: { n: 'Fenda das Profundezas', lv: [40, 50], mons: [['corsario_afogado', 2]], dens: 1 / 32 },
   44: { n: 'Porto das Conchas', safe: true },
+  45: { n: 'Ilhas Nebulosas', lv: [55, 72], mons: [['arraia_lunar', 3], ['serpente_nuvem', 3], ['guardiao_marinho', 2], ['sereia_abissal', 1]], dens: 1 / 30, weather: 'sparkle' },
+  46: { n: 'Vulcão Coral', lv: [78, 100], mons: [['caranguejo_magma', 3], ['golem_vulcanico', 3], ['sereia_abissal', 1], ['tita_tempestade', 0.35]], dens: 1 / 27, weather: 'ash' },
+  47: { n: 'Coroa Celeste', lv: [108, 140], mons: [['oraculo_celeste', 3], ['dragao_marinho', 3], ['serpente_nuvem', 1], ['kraken_ancestral', 0.24]], dens: 1 / 25, weather: 'sparkle' },
 });
 Object.assign(WAYSTONES, {
   w_praca: { n: 'Praça das Trocas', m: 'praca', req: 1, realm: 'Praça das Trocas', d: 'Ponto de encontro: trocas, códigos e pesca' },
@@ -4246,7 +4262,7 @@ Object.assign(MAPNAMES, { praca: 'Praça das Trocas', doce: 'Dimensão Doce', cr
 // MAR DAS CONCHAS — ilhas, cais, tesouros e fauna marinha
 // ------------------------------------------------------------
 function genSea() {
-  const W = 90, H = 62;
+  const W = 154, H = 80;
   const m = new GameMap('mar', 'Mar das Conchas', W, H, { daycycle: true, tint: 'rgba(36,135,190,0.06)' });
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { m.setT(x, y, T.DEEP); m.z[m.idx(x, y)] = 41; }
   const island = (cx, cy, rx, ry, zone, safe) => {
@@ -4261,11 +4277,17 @@ function genSea() {
   island(37, 13, 12, 9, 41, false);
   island(47, 43, 14, 11, 42, false);
   island(76, 30, 12, 13, 43, false);
+  island(105, 12, 12, 9, 45, false);
+  island(108, 52, 14, 11, 46, false);
+  island(137, 32, 13, 16, 47, false);
   // Píer do porto e cais que ligam os três pontos de exploração.
   fillRect(m, 4, 31, 6, 3, T.DOCK); fillRect(m, 16, 31, 6, 3, T.DOCK);
   fillRect(m, 27, 18, 5, 3, T.DOCK); fillRect(m, 42, 17, 5, 3, T.DOCK);
   fillRect(m, 35, 33, 5, 3, T.DOCK); fillRect(m, 54, 42, 5, 3, T.DOCK);
   fillRect(m, 62, 31, 5, 3, T.DOCK);
+  fillRect(m, 84, 27, 5, 3, T.DOCK); fillRect(m, 94, 15, 5, 3, T.DOCK);
+  fillRect(m, 110, 16, 5, 3, T.DOCK); fillRect(m, 95, 47, 5, 3, T.DOCK);
+  fillRect(m, 116, 50, 5, 3, T.DOCK); fillRect(m, 125, 34, 5, 3, T.DOCK);
   addWarp(m, 7, 32, O.STAIRS_UP, { m: 'praca', a: 'hub' }, 'volta');
   addWarp(m, 19, 32, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'porto');
   addWarp(m, 29, 19, O.STAIRS_UP, { m: 'mar', a: 'porto' }, 'recife_volta');
@@ -4273,17 +4295,31 @@ function genSea() {
   addWarp(m, 37, 34, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'nau_volta');
   addWarp(m, 57, 43, O.STAIRS_UP, { m: 'mar', a: 'fenda' }, 'nau');
   addWarp(m, 64, 32, O.STAIRS_UP, { m: 'mar', a: 'nau' }, 'fenda');
+  addWarp(m, 86, 28, O.STAIRS_UP, { m: 'mar', a: 'nevoa' }, 'fenda_nevoa');
+  addWarp(m, 96, 16, O.STAIRS_UP, { m: 'mar', a: 'fenda' }, 'nevoa_fenda');
+  addWarp(m, 113, 17, O.STAIRS_UP, { m: 'mar', a: 'vulcao' }, 'nevoa_vulcao');
+  addWarp(m, 97, 48, O.STAIRS_UP, { m: 'mar', a: 'nevoa' }, 'vulcao_nevoa');
+  addWarp(m, 119, 52, O.STAIRS_UP, { m: 'mar', a: 'torre' }, 'vulcao_torre');
+  addWarp(m, 128, 35, O.STAIRS_UP, { m: 'mar', a: 'vulcao' }, 'torre_vulcao');
   m.anchors.hub = { x: 12, y: 32 };
+  m.anchors.fenda = { x: 64, y: 32 }; m.anchors.nevoa = { x: 96, y: 16 };
+  m.anchors.vulcao = { x: 97, y: 48 }; m.anchors.torre = { x: 128, y: 35 };
   addSign(m, 10, 28, 'Mar das Conchas: explore os cais, abra os baús e procure a Pérola do Leviatã. Recife recomendado: nível 20+.');
   addSign(m, 34, 11, 'Recife Azul — criaturas marinhas e baús de conchas.');
   addSign(m, 44, 40, 'Naufrágio Esquecido — corsários afogados protegem os tesouros.');
   addSign(m, 73, 26, 'Fenda das Profundezas — o Leviatã desperta nas águas escuras.');
+  addSign(m, 101, 8, 'Ilhas Nebulosas: nível 55+. A Arraia Lunar espreita nos céus.');
+  addSign(m, 103, 47, 'Vulcão Coral: nível 78+. Cuidado com o Titã da Tempestade!');
+  addSign(m, 133, 27, 'Coroa Celeste: nível 108+. O Kraken Ancestral protege o tesouro.');
   for (const [x, y] of [[9, 24], [16, 26], [8, 39], [17, 39]]) m.setO(x, y, O.PALM);
   for (const [x, y] of [[35, 10], [39, 14], [32, 15], [42, 12], [45, 44], [50, 40]]) m.setO(x, y, O.SHELL);
   for (const [x, y] of [[42, 43], [49, 45], [52, 40], [55, 44]]) m.setO(x, y, O.BARREL);
   addChest(m, 12, 35, 'wood', 20); addChest(m, 35, 13, 'wood', 24); addChest(m, 40, 12, 'gold', 28);
   addChest(m, 46, 45, 'wood', 34); addChest(m, 52, 41, 'gold', 38); addChest(m, 74, 34, 'gold', 46);
-  m.spawns.push({ mon: 'leviata', x: 77, y: 27, boss: true });
+  addChest(m, 102, 14, 'wood', 58); addChest(m, 110, 11, 'gold', 66);
+  addChest(m, 105, 56, 'wood', 82); addChest(m, 114, 49, 'gold', 94);
+  addChest(m, 135, 37, 'gold', 118); addChest(m, 143, 29, 'gold', 132);
+  m.spawns.push({ mon: 'leviata', x: 77, y: 27, boss: true }, { mon: 'tita_tempestade', x: 109, y: 56, boss: true }, { mon: 'kraken_ancestral', x: 140, y: 38, boss: true });
   return m;
 }
 MAPGEN.mar = genSea;
@@ -4755,7 +4791,7 @@ function gainXp(n, src, tag) {
   n = Math.round(n * guildXpMul());
   const p = G.p;
   const mult = 1 + p.st.xp / 100 + (p.buffs.xpboost > G.t ? 0.5 : 0);
-  n = Math.round(n * mult);
+  n = Math.round(n * mult * adminXpFactor());
   if (n <= 0) return;
   p.xp += n;
   floatText(src || p, '+' + fmt(n) + ' XP' + (tag || ''), tag ? '#a8f0a0' : '#ffffff', 0.95, src ? 0 : 1);
@@ -6259,7 +6295,7 @@ function tick(dt) {
   G.decals = G.decals.filter((d) => G.t - d.t0 < 40000);
   if (G.target && (G.target.dead || G.target.map !== m.id)) setTarget(null);
   netTick(dt);
-  if (G.saveDirty && G.t - G.saveT > 25000) saveGame();
+  if (G.saveDirty && G.t - G.saveT > 15000) saveGame();
 }
 
 // ------------------------------------------------------------
@@ -8646,7 +8682,7 @@ function renderOpts(box) {
   const row = el('div', 'row');
   row.append(btn('Salvar agora', () => { saveGame(); notice('Jogo salvo.', '#7fe07f'); }), btn('Controles', () => UI.toggleHelp(true)));
   box.appendChild(row);
-  box.appendChild(el('p', 'hint', 'O jogo salva sozinho a cada poucos segundos. ' + (NET.db && NET.uid ? 'Seu progresso também fica guardado na sua conta.' : 'O progresso fica neste navegador; use o código abaixo para levar seu personagem para outro aparelho.')));
+  box.appendChild(el('p', 'hint', 'O jogo salva sozinho a cada 15 segundos e ao sair. Use Salvar agora para guardar imediatamente. ' + (NET.db && NET.uid ? 'Seu progresso também fica guardado na sua conta.' : 'O progresso fica neste navegador; use o código abaixo para levar seu personagem para outro aparelho.')));
   const st = el('small', 'hint'); st.id = 'savest'; box.appendChild(st);
   box.appendChild(el('h4', null, 'Código do personagem'));
   const ta = el('textarea'); ta.id = 'savecode'; ta.rows = 3; ta.placeholder = 'Cole aqui um código QDR1: para importar';
@@ -10642,7 +10678,8 @@ UI.openAdmin = () => {
   sec('Admin Abuse');
   b.appendChild(el('p', 'hint', 'Sorte e presentes vão para o servidor. Meteoros e chefes aparecem perto de você, no mesmo mapa.'));
   r = row();
-  r.append(btn('Sorte 5x · 2 min', () => adminAbuseStart('luck')), btn('Chuva de meteoros', () => adminAbuseStart('meteor')), btn('Dar Caixa do Caos a todos', () => adminAbuseStart('gift'), 'pri'));
+  r.append(btn('Sorte 5x - 2 min', () => adminAbuseStart('luck')), btn('XP 3x - 3 min', () => adminAbuseStart('xp')), btn('Curar o servidor', () => adminAbuseStart('heal'), 'pri'),
+    btn('Chuva de meteoros', () => adminAbuseStart('meteor')), btn('Dar Caixa do Caos a todos', () => adminAbuseStart('gift'), 'pri'));
   const bosses = Object.entries(MON).filter(([, d]) => d.boss);
   if (bosses.length) {
     r = row(); const bossSel = el('select', 'svcode');
@@ -10653,6 +10690,7 @@ UI.openAdmin = () => {
 };
 
 function adminLuckFactor() { return G.adminLuckUntil > Date.now() ? 5 : 1; }
+function adminXpFactor() { return G.adminXpUntil > Date.now() ? 3 : 1; }
 function adminAbuseStart(kind, extra) {
   if (!isAdmin()) return notice('Só o administrador pode iniciar esse evento.', '#ff8a6a');
   const e = Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8), k: kind, at: Date.now(), map: G.map.id, x: G.p.x, y: G.p.y, by: G.p.name }, extra || {});
@@ -10661,7 +10699,7 @@ function adminAbuseStart(kind, extra) {
   else notice('Você está sem servidor online: o evento só acontece no seu jogo.', '#ff9d68');
 }
 function peerAdminAbuse(a, peer, e) {
-  if (!G.started || !e || !isAdminName(a.name) || isMuted(a) || !['luck', 'gift', 'meteor', 'boss'].includes(e.k) || typeof e.id !== 'string' || e.id.length > 48 || !Number.isFinite(e.at) || !MAPGEN[e.map] || !Number.isFinite(e.x) || !Number.isFinite(e.y) || Date.now() - e.at > 45000 || e.at - Date.now() > 5000) return;
+  if (!G.started || !e || !isAdminName(a.name) || isMuted(a) || !['luck', 'xp', 'heal', 'gift', 'meteor', 'boss'].includes(e.k) || typeof e.id !== 'string' || e.id.length > 48 || !Number.isFinite(e.at) || !MAPGEN[e.map] || !Number.isFinite(e.x) || !Number.isFinite(e.y) || Date.now() - e.at > 45000 || e.at - Date.now() > 5000) return;
   const key = peer + ':' + e.id;
   if (NET.seenAdminEvents.has(key)) return;
   NET.seenAdminEvents.add(key);
@@ -10675,6 +10713,8 @@ function applyAdminAbuse(e) {
     G.adminLuckUntil = Math.max(G.adminLuckUntil || 0, Date.now() + 120000);
     notice('Admin Abuse: sorte 5x por 2 minutos!', '#ffda70'); log('[Admin Abuse] Sorte 5x ativada!', 'lvl'); sfx('rare'); return;
   }
+  if (e.k === 'xp') { G.adminXpUntil = Math.max(G.adminXpUntil || 0, Date.now() + 180000); notice('Admin Abuse: XP 3x por 3 minutos!', '#8fe9e6'); log('[Admin Abuse] XP 3x ativado!', 'lvl'); sfx('rare'); return; }
+  if (e.k === 'heal') { p.hp = p.maxHp; p.mp = p.maxMp; p.dead = false; G.saveDirty = true; saveGame(); notice('O servidor inteiro foi curado!', '#8fe9e6'); log('[Admin Abuse] Cura geral!', 'lvl'); sfx('heal'); return; }
   if (e.k === 'gift') {
     const gift = makeItem('caixa_caos', 0, 1);
     if (!addToBag(p, gift)) dropItem(p, gift);

@@ -630,7 +630,7 @@ function outline(c, col) {
 const T = {
   VOID: 0, GRASS: 1, DGRASS: 2, SWAMP: 3, SAND: 4, SNOW: 5, DIRT: 6, COBBLE: 7, WOOD: 8, CAVE: 9, ICE: 10,
   WATER: 11, DEEP: 12, LAVA: 13, MUD: 14, ASH: 15, SSTONE: 16, CRYPT: 17, CLOUD: 18, HELL: 19, CARPET: 20,
-  AUTUMN: 21, SKY: 22,
+  AUTUMN: 21, SKY: 22, CORAL: 23, BASALT: 24, STARSTONE: 25,
   W_STONE: 30, W_WOOD: 31, W_CAVE: 32, W_SAND: 33, W_ICE: 34, W_CRYPT: 35, W_HELL: 36,
 };
 const TILE = [];
@@ -751,6 +751,9 @@ dt(T.AUTUMN, 'Relva de outono', '#84893c', { n: 4, d(P, r) {
   speck(P, r, '#84893c', ['#909542', '#767b34'], 34); tufts(P, r, '#636829', 2);
   for (let i = 0; i < 5; i++) P.p(rint(r, 0, 15), rint(r, 0, 15), pick(r, ['#d17a2a', '#c94a2a', '#e0a030']));
 } });
+dt(T.CORAL, 'Chao de coral', '#bd877a', { n: 3, d(P, r) { speck(P, r, '#bd877a', ['#e8ad9d', '#c98c84', '#9f6f79'], 27); const x=rint(r,2,11), y=rint(r,2,10); P.r(x,y,4,1,'#f6d0b2'); P.r(x+1,y+1,2,2,'#e89baa'); P.p(x+4,y+2,'#78d5cc'); } });
+dt(T.BASALT, 'Rocha de magma', '#493a48', { n: 3, d(P, r) { speck(P, r, '#493a48', ['#5d4651', '#302d43', '#6b4a50'], 28); P.r(2,9,5,1,'#c34c37'); P.r(5,10,3,1,'#ff9a49'); P.p(7,11,'#ffe082'); P.r(11,4,3,1,'#a63c36'); } });
+dt(T.STARSTONE, 'Pedra estelar', '#565b87', { n: 3, d(P, r) { speck(P, r, '#565b87', ['#747cac', '#444a77', '#66729c'], 24); P.r(3,3,4,1,'#a9e9ff'); P.p(4,4,'#ffffff'); P.r(10,10,3,1,'#d4b7ff'); P.p(11,9,'#fff2b0'); } });
 dw(T.W_STONE, 'Muralha', '#3d4048', '#9a9da6', '#6f727b', '#4d5059', 'brick');
 dw(T.W_WOOD, 'Parede de madeira', '#5a3d24', '#b8834c', '#8a5c30', '#5f3d1e', 'plank');
 dw(T.W_CAVE, 'Rocha', '#2a2420', '#4a413a', '#3a322c', '#241f1b', 'rock');
@@ -811,7 +814,7 @@ const O = {
   SHELL: 29, CHEST: 30, CHEST_OPEN: 31, GCHEST: 32, GCHEST_OPEN: 33, BARREL: 34, CRATE: 35, FENCE: 36, SIGN: 37,
   TORCH: 38, CAMPFIRE: 39, WELL: 40, STATUE: 41, GRAVE: 42, STAIRS_DOWN: 43, STAIRS_UP: 44, CAVE_ENT: 45,
   WAYSTONE: 46, DOOR: 47, PILLAR: 48, BOOKSHELF: 49, TABLE: 50, ANVIL: 51, ALTAR: 52, CLOUDPUFF: 53, URN: 54,
-  SARCO: 55, CAULDRON: 56, BANNER: 57, HAY: 58, BRAZIER: 59,
+  SARCO: 55, CAULDRON: 56, BANNER: 57, HAY: 58, BRAZIER: 59, CORAL: 60, MAGMA_CRYSTAL: 61, STAR_CRYSTAL: 62,
 };
 const OBJ = [];
 function dobj(id, name, o) {
@@ -955,6 +958,9 @@ dobj(O.COBWEB, 'Teia', { solid: false, decal: true, d(P) {
   for (let i = 0; i < 14; i++) { P.p(1 + i, 1 + i, c); P.p(14 - i, 1 + i, c); }
   P.r(1, 7, 14, 1, c); P.r(7, 1, 1, 14, c); P.r(4, 4, 8, 1, c); P.r(4, 11, 8, 1, c); P.r(4, 4, 1, 8, c); P.r(11, 4, 1, 8, c);
 } });
+dobj(O.CORAL, 'Coral Luminoso', { n: 2, light: 2, mm: '#ff8b9e', d(P, v) { P.r(7,10,2,5,'#6a4a62'); P.r(4,6,2,5,v?'#ff9e9b':'#ec718a'); P.r(10,5,2,6,v?'#82e1d3':'#52b9b7'); P.r(6,4,2,2,'#ffd3a4'); P.r(10,3,2,2,'#c9faff'); P.p(8,9,'#fff0b0'); } });
+dobj(O.MAGMA_CRYSTAL, 'Cristal de Magma', { n: 2, light: 2, mm: '#ff743d', d(P, v) { P.r(7,12,3,3,'#413541'); P.r(5,6,3,7,'#a83c35'); P.r(7,3,4,10,v?'#ffbc55':'#f77b3c'); P.r(8,5,1,5,'#fff0a8'); P.p(11,8,'#ffdf8a'); } });
+dobj(O.STAR_CRYSTAL, 'Cristal Estelar', { n: 2, light: 3, mm: '#8fe9e6', d(P, v) { P.r(6,12,5,3,'#46517d'); P.r(5,7,6,5,v?'#bcefff':'#84c9ff'); P.r(7,3,3,7,'#d4b7ff'); P.r(8,1,2,7,'#ffffff'); P.p(4,8,'#fff2b0'); P.p(12,6,'#a9f8ff'); } });
 dobj(O.SHELL, 'Concha', { solid: false, decal: true, d(P) {
   P.r(5, 8, 5, 4, '#f2d6c8'); P.r(6, 7, 3, 1, '#f2d6c8'); P.p(6, 9, '#d8a898'); P.p(8, 9, '#d8a898'); P.p(7, 11, '#d8a898');
 } });
@@ -1339,6 +1345,7 @@ const BEAST = {
       P.r(7 - big, 5 - big, 6 + big * 2, 7 + big, c); P.r(8, 4 - big, 4, 1, c); P.r(7 - big, 5 - big, 6 + big * 2, 1, shade(c, 0.25));
       if (o.bird) { P.r(12 + big, 8, 3, 2, '#e2b04a'); P.p(11, 7, EYE); P.p(8, 7, EYE); P.r(8, 12 + big, 1, 2, '#e2b04a'); P.r(11, 12 + big, 1, 2, '#e2b04a'); }
       else { P.p(7, 3, c); P.p(12, 3, c); P.p(8, 7, o.eye || '#ff4a3a'); P.p(11, 7, o.eye || '#ff4a3a'); P.p(9, 10, '#fff'); P.p(10, 10, '#fff'); }
+      if (o.manta) { P.r(6, 9, 8, 2, o.c3 || '#fff3d8'); P.r(8, 10, 4, 2, o.c); P.p(4, 5, o.eye || '#fff'); P.p(15, 5, o.eye || '#fff'); P.r(9, 12, 2, 3, c2); P.p(10, 15, c2); }
       if (o.horn) { P.p(7, 3, o.horn); P.p(12, 3, o.horn); P.p(6, 2, o.horn); P.p(13, 2, o.horn); }
     });
   },
@@ -1378,7 +1385,7 @@ const BEAST = {
       if (!f) { P.r(1, 11, 6, 2, c); P.r(6, 9, 2, 3, c); P.r(7, 8, 5, 2, c); P.r(11, 6, 2, 3, c); P.r(12, 4, 2, 3, c); }
       else { P.r(1, 10, 5, 2, c); P.r(5, 10, 2, 3, c); P.r(6, 11, 5, 2, c); P.r(10, 7, 2, 5, c); P.r(11, 4, 2, 4, c); }
       P.r(12, 2, 5, 4, c); P.r(12, 2, 5, 1, c2); P.p(15, 3, o.eye || EYE); P.r(17, 4, 2, 1, '#e2455a');
-      if (o.hood) { P.r(10, 1, 2, 6, c2); P.r(17, 1, 1, 2, c2); }
+      if (o.hood) { P.r(10, 1, 2, 6, c2); P.r(17, 1, 1, 2, c2); P.r(9, 2, 1, 3, '#ffffff'); P.p(10, 1, o.eye || '#fff'); }
       if (!f) { P.p(3, 11, c2); P.p(8, 8, c2); P.p(12, 5, c2); P.r(1, 12, 6, 1, d); } else { P.p(2, 10, c2); P.p(8, 11, c2); P.p(11, 6, c2); P.r(6, 12, 5, 1, d); }
     });
   },
@@ -1388,6 +1395,10 @@ const BEAST = {
       P.r(5, 8, 6, 12, c); P.r(4, 11, 8, 7, c); P.r(6, 4, 4, 5, c); P.r(f ? 8 : 7, 1, 2, 4, c); P.r(5, 20, 2, 2, c); P.r(9, 20, 2, 2, c);
       P.r(6, 10, 4, 8, c2); P.r(7, 6, 2, 5, c2); P.r(2, 12 + (f ? 1 : 0), 2, 4, c); P.r(12, 12 - (f ? 0 : -1), 2, 4, c);
       P.r(6, 12, 1, 2, c3); P.r(9, 12, 1, 2, c3); P.r(7, 16, 2, 1, shade(c, -0.4));
+      if (o.tentacles) {
+        for (let i = 0; i < 4; i++) { const x = 3 + i * 3, sway = f && i % 2 ? 1 : 0; P.r(x, 16, 2, 3, c2); P.r(x + sway, 18, 2, 3, c2); P.p(x + 1 + sway, 21, c3); }
+        P.r(6, 9, 4, 1, o.spark || '#fff0a8');
+      }
       if (o.spark) { P.p(3, 6 + f * 2, o.spark); P.p(12, 4 + f * 3, o.spark); P.p(8, f ? 0 : 19, o.spark); }
     });
   },
@@ -1513,6 +1524,16 @@ const ICON = {
   crown(P, c) { const g = '#f2c23a'; P.r(3, 8, 10, 5, g); P.r(3, 5, 2, 3, g); P.r(7, 4, 2, 4, g); P.r(11, 5, 2, 3, g); P.r(3, 12, 10, 1, '#b8881e'); P.p(4, 10, c); P.p(8, 10, c); P.p(11, 10, c); P.p(7, 4, '#fff'); },
   key(P, c) { P.r(3, 3, 5, 5, c); P.clr(5, 5, 1, 1); P.r(7, 7, 6, 2, c); P.r(10, 9, 1, 2, c); P.r(12, 9, 1, 3, c); },
   tablet(P, c) { P.r(3, 2, 10, 12, '#8a8d95'); P.r(3, 2, 10, 1, '#a8abb3'); P.r(5, 4, 6, 1, c); P.r(5, 6, 4, 1, c); P.r(5, 8, 6, 1, c); P.r(5, 10, 3, 1, c); P.r(3, 13, 10, 1, '#5f626b'); },
+  pearl(P, c) { P.r(4,6,8,6,'#c9fff7'); P.r(5,4,6,2,c); P.r(4,6,8,1,'#ffffff'); P.r(5,12,6,1,'#75c9c8'); P.r(7,7,2,3,'#ffffff'); P.p(11,9,'#aaf4e9'); },
+  aurora(P, c) { P.r(3,9,10,5,'#40506f'); P.r(5,5,7,6,c); P.r(7,2,4,7,'#d9fbff'); P.r(8,3,2,5,'#ffffff'); P.p(4,8,'#a5fff0'); P.p(12,6,'#caa9ff'); },
+  moonflower(P, c) { P.r(7,8,2,6,'#44844e'); P.r(4,12,7,2,'#3a7447'); P.r(4,5,3,3,c); P.r(9,5,3,3,c); P.r(6,3,4,3,c); P.r(6,8,4,2,'#ffe99a'); P.p(7,5,'#ffffff'); },
+  solarflame(P, c) { P.r(4,10,8,4,'#9b3e35'); P.r(5,7,6,6,c); P.r(7,3,4,7,'#ffd15f'); P.r(8,1,2,6,'#fff4b0'); P.p(4,8,'#ff8c43'); P.p(11,7,'#fff0a8'); },
+  coralicon(P, c) { P.r(7,9,2,5,'#734b64'); P.r(4,5,2,5,c); P.r(10,4,2,6,'#55c6b7'); P.r(3,3,3,2,'#ffd6ae'); P.r(10,2,3,2,'#c6ffff'); P.p(8,7,'#fff0b0'); },
+  chaosbox(P, c) { P.r(3,5,10,8,'#573c75'); P.r(3,5,10,2,c); P.r(4,9,8,1,'#bd8cff'); P.r(7,7,2,5,'#ffdb78'); P.r(6,11,4,2,'#f5be48'); P.p(4,4,'#ffffff'); P.p(12,4,'#8fe9e6'); },
+  tideblade(P, c) { P.diag(4,12,9,'#d7fbff',2); P.diag(5,11,8,c,1); P.r(2,10,5,2,'#f2c23a'); P.diag(2,14,3,'#6c4a38',2); P.p(12,2,'#ffffff'); },
+  cometshield(P, c) { P.r(4,3,8,8,c); P.r(5,11,6,2,c); P.r(7,13,2,1,c); P.r(5,4,5,1,'#ffffff'); P.r(7,5,2,6,'#bcefff'); P.p(10,7,'#ffe88a'); },
+  chaosorb(P, c) { P.r(5,3,6,2,c); P.r(3,5,10,6,c); P.r(5,11,6,2,c); P.p(4,4,'#ffdf78'); P.r(7,5,2,5,'#ffffff'); P.p(11,8,'#8fe9e6'); P.p(2,7,'#ff9dff'); },
+  deepcrown(P, c) { P.r(3,7,10,6,'#3f6379'); P.r(3,5,2,3,c); P.r(7,3,2,5,'#ffffff'); P.r(11,5,2,3,'#8fe9e6'); P.r(4,11,8,1,'#f2c23a'); P.p(6,8,'#c9a6ff'); P.p(10,8,'#fff0a8'); },
 };
 const iconCache = new Map();
 function itemIcon(k, c, c2) {
@@ -2331,8 +2352,8 @@ M('caranguejo_coral', 'Caranguejo de Coral', 22, B({ t: 'slime', c: '#e86b5b', c
 M('sereia_coral', 'Sereia do Recife', 29, H({ skin: '#8ac8d8', hair: '#235b7a', hairStyle: 2, shirt: '#54aab2', pants: '#28687a' }, {}, { eye: '#c8f8ff' }), { spd: 480, range: 4, keep: 2, proj: 'ice', elem: 'ice', loot: [['perola_marinha', 0.4, 1, 1], ['concha_colorida', 0.35, 1, 2]], res: { ice: 45, fire: -20 } });
 M('corsario_afogado', 'Corsário Afogado', 38, H({ skin: '#7d978e', hair: '#283d45', hairStyle: 4, shirt: '#344850', pants: '#28343c' }, { weapon: { type: 'sword', col: '#91b2bd' } }, { eye: '#8ffff0', scar: true }), { spd: 440, hpM: 1.25, dmgM: 1.15, loot: [['perola_marinha', 0.5, 1, 2], ['concha_colorida', 0.45, 1, 3]], res: { ice: 25, death: 20 } });
 M('leviata', 'Leviatã das Profundezas', 48, B({ t: 'dragon', c: '#17395a', c2: '#55c7d3', c3: '#b8f6e9', horn: '#fff0b0', fire: '#53c9db' }), { boss: true, sc: 1.7, spd: 500, hpM: 6, dmgM: 1.25, elem: 'ice', blood: 'green', loot: [['perola_marinha', 1, 5, 8], ['concha_colorida', 1, 5, 10], ['pedra_forja', 1, 2, 4]], res: { ice: 50, energy: 30, fire: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.35, cd: 8000, tele: 1100 }, { k: 'proj', elem: 'ice', mult: 1.5, cd: 2600 }, { k: 'heal', pct: 0.08, cd: 12000 }] });
-M('arraia_lunar', 'Arraia Lunar', 56, B({ t: 'fly', c: '#6954a8', c2: '#c7b8ff', eye: '#fff0a8' }), { spd: 330, flyer: true, elem: 'energy', light: 2, loot: [['cristal_aurora', 0.55, 1, 2], ['essencia_tempestade', 0.25, 1, 1]], res: { energy: 35, ice: -20 } });
-M('serpente_nuvem', 'Serpente das Nuvens', 63, B({ t: 'snake', c: '#a7d9e8', c2: '#6689d4', eye: '#fff3bd' }), { spd: 350, elem: 'ice', onHit: { k: 'slow', ch: 0.35 }, loot: [['cristal_aurora', 0.45, 1, 2], ['flor_lunar', 0.3, 1, 1]], res: { ice: 30, energy: 20, fire: -25 } });
+M('arraia_lunar', 'Arraia Lunar', 56, B({ t: 'fly', c: '#6954a8', c2: '#c7b8ff', c3: '#e6ddff', eye: '#fff0a8', manta: true }), { spd: 330, flyer: true, elem: 'energy', light: 2, loot: [['cristal_aurora', 0.55, 1, 2], ['essencia_tempestade', 0.25, 1, 1]], res: { energy: 35, ice: -20 } });
+M('serpente_nuvem', 'Serpente das Nuvens', 63, B({ t: 'snake', c: '#a7d9e8', c2: '#6689d4', eye: '#fff3bd', hood: true }), { spd: 350, elem: 'ice', onHit: { k: 'slow', ch: 0.35 }, loot: [['cristal_aurora', 0.45, 1, 2], ['flor_lunar', 0.3, 1, 1]], res: { ice: 30, energy: 20, fire: -25 } });
 M('guardiao_marinho', 'Guardião das Marés', 70, H({ skin: '#6eb5ae', hair: '#193f5c', shirt: '#286b78', pants: '#173c58' }, { weapon: { type: 'spear', col: '#d8fff1' }, shield: { col: '#278b9b' }, body: { cls: 'h', col: '#286b78' }, helm: { cls: 'h', col: '#278b9b', plume: '#b8f6e9' } }, { eye: '#d8fff1' }), { spd: 440, hpM: 1.8, dmgM: 1.2, loot: [['essencia_tempestade', 0.5, 1, 2], ['concha_colorida', 0.45, 2, 4]], eq: 0.22, res: { ice: 35, phys: 20, energy: -20 } });
 M('sereia_abissal', 'Sereia Abissal', 78, H({ skin: '#7986ca', hair: '#241c55', hairStyle: 5, shirt: '#413477', pants: '#1c2d5c' }, { weapon: { type: 'wand', col: '#9a7cff' } }, { eye: '#ff92dd', horns: '#7ddcff', wings: '#5446a0', halo: true }), { spd: 400, range: 5, keep: 3, proj: 'death', elem: 'death', light: 2, loot: [['flor_lunar', 0.45, 1, 2], ['selo_caos', 0.18, 1, 1]], res: { death: 30, ice: 45, holy: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.25, cd: 8500, tele: 1000 }] });
 M('caranguejo_magma', 'Caranguejo de Magma', 84, B({ t: 'scorp', c: '#a53d2d', c2: '#ff9f45', eye: '#fff0a8' }), { spd: 470, hpM: 2, onHit: { k: 'burn', ch: 0.28 }, loot: [['chama_solar', 0.5, 1, 2], ['pedra_forja', 0.14, 1, 1]], res: { fire: 65, phys: 25, ice: -35 } });
@@ -2340,16 +2361,16 @@ M('golem_vulcanico', 'Golem Vulcânico', 92, H({ skin: '#653b39', shirt: '#8c392
 M('tita_tempestade', 'Titã da Tempestade', 98, B({ t: 'dragon', c: '#324f7c', c2: '#73d7ef', c3: '#b9f6ff', horn: '#fff0a8', fire: '#91eaff' }), { boss: true, sc: 2, spd: 500, hpM: 9, dmgM: 1.5, xpM: 14, elem: 'energy', light: 6, loot: [['cristal_aurora', 1, 8, 16], ['essencia_tempestade', 1, 6, 12], ['u_sabre_temporal', 0.45, 1, 1], ['u_escudo_cometa', 0.3, 1, 1], ['pedra_forja', 1, 4, 7]], res: { energy: 65, ice: 40, earth: -30 }, ab: [{ k: 'beam', elem: 'energy', len: 8, mult: 1.75, cd: 6500, tele: 950 }, { k: 'meteor', elem: 'energy', n: 6, mult: 1.4, cd: 10000 }, { k: 'heal', pct: 0.1, cd: 13000 }] });
 M('oraculo_celeste', 'Oráculo Celeste', 112, H({ skin: '#ddc5ff', hair: '#80e7ff', hairStyle: 2, shirt: '#433d85', pants: '#242454' }, { weapon: { type: 'staff', col: '#80e7ff' }, body: { cls: 'l', col: '#433d85' } }, { eye: '#fff0a8', wings: '#91eaff', halo: true }), { spd: 370, range: 6, keep: 3, proj: 'energy', elem: 'energy', light: 4, loot: [['cristal_aurora', 0.6, 2, 4], ['flor_lunar', 0.4, 1, 2]], eq: 0.34, res: { energy: 55, death: -20 }, ab: [{ k: 'beam', elem: 'energy', len: 8, mult: 1.6, cd: 7500, tele: 1000 }, { k: 'tp', cd: 9500 }] });
 M('dragao_marinho', 'Dragão do Mar Astral', 124, B({ t: 'dragon', c: '#17395a', c2: '#42c7d1', c3: '#d8fff1', horn: '#a6f2ff', fire: '#7de6ff' }), { spd: 440, hpM: 3.2, dmgM: 1.45, xpM: 2.5, elem: 'ice', light: 4, loot: [['essencia_tempestade', 0.7, 2, 5], ['chama_solar', 0.35, 1, 3], ['diamante', 0.16, 1, 2]], eq: 0.4, res: { ice: 65, energy: 45, fire: -30 }, ab: [{ k: 'beam', elem: 'ice', len: 8, mult: 1.7, cd: 7000, tele: 900 }, { k: 'nova', elem: 'ice', r: 3, mult: 1.5, cd: 10000, tele: 1200 }] });
-M('kraken_ancestral', 'Kraken Ancestral', 138, B({ t: 'elem', c: '#182b54', c2: '#465bc1', c3: '#91edff', spark: '#fff0a8' }), { boss: true, sc: 2.1, spd: 480, hpM: 12, dmgM: 1.7, xpM: 18, range: 5, keep: 3, proj: 'death', elem: 'death', blood: 'green', light: 7, loot: [['nucleo_vazio', 1, 6, 12], ['essencia_tempestade', 1, 8, 18], ['u_orbe_caos', 0.45, 1, 1], ['u_corona_mar', 0.4, 1, 1], ['caixa_caos', 0.65, 1, 2], ['pedra_forja', 1, 6, 10]], res: { death: 65, ice: 35, holy: -35 }, ab: [{ k: 'nova', elem: 'death', r: 3, mult: 1.65, cd: 8500, tele: 1200 }, { k: 'meteor', elem: 'ice', n: 8, mult: 1.5, cd: 12000 }, { k: 'heal', pct: 0.12, cd: 14000 }] });
-addItem({ id: 'perola_marinha', name: 'Pérola Marinha', cat: 'mat', stack: true, value: 90, icon: ['gem', '#8fe9e6'] });
+M('kraken_ancestral', 'Kraken Ancestral', 138, B({ t: 'elem', c: '#182b54', c2: '#465bc1', c3: '#91edff', spark: '#fff0a8', tentacles: true }), { boss: true, sc: 2.1, spd: 480, hpM: 12, dmgM: 1.7, xpM: 18, range: 5, keep: 3, proj: 'death', elem: 'death', blood: 'green', light: 7, loot: [['nucleo_vazio', 1, 6, 12], ['essencia_tempestade', 1, 8, 18], ['u_orbe_caos', 0.45, 1, 1], ['u_corona_mar', 0.4, 1, 1], ['caixa_caos', 0.65, 1, 2], ['pedra_forja', 1, 6, 10]], res: { death: 65, ice: 35, holy: -35 }, ab: [{ k: 'nova', elem: 'death', r: 3, mult: 1.65, cd: 8500, tele: 1200 }, { k: 'meteor', elem: 'ice', n: 8, mult: 1.5, cd: 12000 }, { k: 'heal', pct: 0.12, cd: 14000 }] });
+addItem({ id: 'perola_marinha', name: 'Pérola Marinha', cat: 'mat', stack: true, value: 90, icon: ['pearl', '#8fe9e6'] });
 addItem({ id: 'concha_colorida', name: 'Concha Colorida', cat: 'mat', stack: true, value: 32, icon: ['shell', '#ff9bc5'] });
-addItem({ id: 'fragmento_cometa', name: 'Fragmento de Cometa', cat: 'mat', stack: true, value: 240, icon: ['gem', '#ffb45c'] });
-addItem({ id: 'essencia_tempestade', name: 'Essência da Tempestade', cat: 'mat', stack: true, value: 360, icon: ['dust', '#7edfff'] });
-addItem({ id: 'selo_caos', name: 'Selo do Caos', cat: 'mat', stack: true, value: 500, icon: ['heart', '#d982ff'] });
-addItem({ id: 'caixa_caos', name: 'Caixa do Caos', cat: 'mat', stack: true, value: 1200, icon: ['crown', '#ffcf5a'] });
-addItem({ id: 'cristal_aurora', name: 'Cristal da Aurora', cat: 'mat', stack: true, value: 430, icon: ['gem', '#9fe8f5'] });
-addItem({ id: 'flor_lunar', name: 'Flor Lunar', cat: 'mat', stack: true, value: 520, icon: ['heart', '#c8a6ff'] });
-addItem({ id: 'chama_solar', name: 'Chama Solar', cat: 'mat', stack: true, value: 640, icon: ['gem', '#ff8b47'] });
+addItem({ id: 'fragmento_cometa', name: 'Fragmento de Cometa', cat: 'mat', stack: true, value: 240, icon: ['aurora', '#ffb45c'] });
+addItem({ id: 'essencia_tempestade', name: 'Essência da Tempestade', cat: 'mat', stack: true, value: 360, icon: ['solarflame', '#7edfff'] });
+addItem({ id: 'selo_caos', name: 'Selo do Caos', cat: 'mat', stack: true, value: 500, icon: ['chaosorb', '#d982ff'] });
+addItem({ id: 'caixa_caos', name: 'Caixa do Caos', cat: 'mat', stack: true, value: 1200, icon: ['chaosbox', '#ffcf5a'] });
+addItem({ id: 'cristal_aurora', name: 'Cristal da Aurora', cat: 'mat', stack: true, value: 430, icon: ['aurora', '#9fe8f5'] });
+addItem({ id: 'flor_lunar', name: 'Flor Lunar', cat: 'mat', stack: true, value: 520, icon: ['moonflower', '#c8a6ff'] });
+addItem({ id: 'chama_solar', name: 'Chama Solar', cat: 'mat', stack: true, value: 640, icon: ['solarflame', '#ff8b47'] });
 
 // materiais das dimensões
 [
@@ -2370,10 +2391,10 @@ U2('u_arco_prisma', 'bow_7', 'Arco do Arco-Íris', { col: '#ff8ad8', over: { atk
 U2('u_lamina_nyx', 'sword_10', 'Lâmina de Nyx', { rar: 5, col: '#ff4fff', over: { atk: 450 }, aff: [['ls', 6], ['e_death', 90], ['crit', 10], ['critd', 40]] });
 U2('u_manto_estelar', 'body_l_10', 'Manto Estelar', { rar: 5, col: '#1a1a4a', over: { stats: { mp: 320 } }, aff: [['mag', 22], ['mpr', 16], ['allres', 10], ['cdr', 10]] });
 U2('u_olho_nyx', 'amu_fur_3', 'Olho de Nyx', { rar: 5, col: '#ff4fff', aff: [['crit', 9], ['critd', 50], ['e_death', 60], ['xp', 15]] });
-U2('u_sabre_temporal', 'sword_10', 'Sabre da Tempestade', { rar: 5, col: '#63d9ee', over: { atk: 410 }, aff: [['crit', 10], ['as', 12], ['e_ice', 70], ['spd', 7]] });
-U2('u_escudo_cometa', 'shield_7', 'Escudo de Cometa', { rar: 5, col: '#ffb45c', over: { def: 82 }, aff: [['allres', 12], ['thorns', 22], ['hp', 280], ['hpr', 8]] });
-U2('u_orbe_caos', 'wand_7', 'Orbe do Caos', { rar: 5, col: '#d982ff', over: { elem: 'energy', atk: 360, mag: 48 }, aff: [['mag', 18], ['crit', 9], ['e_energy', 75], ['cdr', 8]] });
-U2('u_corona_mar', 'amu_fur_3', 'Coroa do Mar Profundo', { rar: 5, col: '#70e8dc', aff: [['hp', 360], ['mp', 250], ['allres', 12], ['xp', 18]] });
+U2('u_sabre_temporal', 'sword_10', 'Sabre da Tempestade', { rar: 5, col: '#63d9ee', icon: ['tideblade', '#63d9ee'], over: { atk: 410 }, aff: [['crit', 10], ['as', 12], ['e_ice', 70], ['spd', 7]] });
+U2('u_escudo_cometa', 'shield_7', 'Escudo de Cometa', { rar: 5, col: '#ffb45c', icon: ['cometshield', '#ffb45c'], over: { def: 82 }, aff: [['allres', 12], ['thorns', 22], ['hp', 280], ['hpr', 8]] });
+U2('u_orbe_caos', 'wand_7', 'Orbe do Caos', { rar: 5, col: '#d982ff', icon: ['chaosorb', '#d982ff'], over: { elem: 'energy', atk: 360, mag: 48 }, aff: [['mag', 18], ['crit', 9], ['e_energy', 75], ['cdr', 8]] });
+U2('u_corona_mar', 'amu_fur_3', 'Coroa do Mar Profundo', { rar: 5, col: '#70e8dc', icon: ['deepcrown', '#70e8dc'], aff: [['hp', 360], ['mp', 250], ['allres', 12], ['xp', 18]] });
 
 // ------------------------------------------------------------
 // PESCARIA
@@ -4271,11 +4292,11 @@ function genSea() {
   const W = 154, H = 80;
   const m = new GameMap('mar', 'Mar das Conchas', W, H, { daycycle: true, tint: 'rgba(36,135,190,0.06)' });
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { m.setT(x, y, T.DEEP); m.z[m.idx(x, y)] = 41; }
-  const island = (cx, cy, rx, ry, zone, safe) => {
+  const island = (cx, cy, rx, ry, zone, safe, terrain) => {
     for (let y = Math.max(2, cy - ry - 2); y <= Math.min(H - 3, cy + ry + 2); y++) for (let x = Math.max(2, cx - rx - 2); x <= Math.min(W - 3, cx + rx + 2); x++) {
       const d = Math.sqrt(((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2) + (hash2(x, y, 741 + zone) - 0.5) * 0.12;
       if (d > 1.08) continue;
-      const i = m.idx(x, y); m.setT(x, y, d > 0.79 ? T.SAND : T.GRASS); m.z[i] = zone;
+      const i = m.idx(x, y); m.setT(x, y, d > 0.79 ? T.SAND : (terrain || T.GRASS)); m.z[i] = zone;
       if (safe && d < 0.88) m.pz[i] = 1;
     }
   };
@@ -4283,9 +4304,9 @@ function genSea() {
   island(37, 13, 12, 9, 41, false);
   island(47, 43, 14, 11, 42, false);
   island(76, 30, 12, 13, 43, false);
-  island(105, 12, 12, 9, 45, false);
-  island(108, 52, 14, 11, 46, false);
-  island(137, 32, 13, 16, 47, false);
+  island(105, 12, 12, 9, 45, false, T.CORAL);
+  island(108, 52, 14, 11, 46, false, T.BASALT);
+  island(137, 32, 13, 16, 47, false, T.STARSTONE);
   // Píer do porto e cais que ligam os três pontos de exploração.
   fillRect(m, 4, 31, 6, 3, T.DOCK); fillRect(m, 16, 31, 6, 3, T.DOCK);
   fillRect(m, 27, 18, 5, 3, T.DOCK); fillRect(m, 42, 17, 5, 3, T.DOCK);
@@ -4319,6 +4340,9 @@ function genSea() {
   addSign(m, 133, 27, 'Coroa Celeste: nível 108+. O Kraken Ancestral protege o tesouro.');
   for (const [x, y] of [[9, 24], [16, 26], [8, 39], [17, 39]]) m.setO(x, y, O.PALM);
   for (const [x, y] of [[35, 10], [39, 14], [32, 15], [42, 12], [45, 44], [50, 40]]) m.setO(x, y, O.SHELL);
+  for (const [x, y] of [[101, 10], [108, 8], [111, 13]]) m.setO(x, y, O.CORAL);
+  for (const [x, y] of [[103, 52], [112, 55], [116, 47]]) m.setO(x, y, O.MAGMA_CRYSTAL);
+  for (const [x, y] of [[134, 27], [141, 33], [146, 40]]) m.setO(x, y, O.STAR_CRYSTAL);
   for (const [x, y] of [[42, 43], [49, 45], [52, 40], [55, 44]]) m.setO(x, y, O.BARREL);
   addChest(m, 12, 35, 'wood', 20); addChest(m, 35, 13, 'wood', 24); addChest(m, 40, 12, 'gold', 28);
   addChest(m, 46, 45, 'wood', 34); addChest(m, 52, 41, 'gold', 38); addChest(m, 74, 34, 'gold', 46);

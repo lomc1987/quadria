@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Quadria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -177,6 +177,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .tab:focus-vi
 .notice { padding: 3px 12px; font-size: 15px; font-weight: 600; text-shadow: 1px 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; transition: opacity .5s; max-width: 90%; text-align: center; }
 .notice.out { opacity: 0; }
 #sidebtn { display: none; position: absolute; right: 8px; top: 64px; z-index: 5; }
+#sideclose { display: none; }
 #cv:focus { outline: none; }
 
 /* online */
@@ -185,8 +186,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .tab:focus-vi
 .dot.wait { background: #e8c040; }
 #onlinebtn { position: absolute; right: 8px; top: 34px; pointer-events: auto; padding: 3px 9px; border: 0; font-size: 12px; color: var(--text); background: rgba(15,12,22,.8); box-shadow: inset 1px 1px 0 var(--hi), inset -1px -1px 0 var(--lo); cursor: pointer; font-variant-numeric: tabular-nums; }
 #onlinebtn:hover { background: rgba(46,38,64,.95); }
-#sbrbtn { position: absolute; right: 8px; top: 62px; pointer-events: auto; padding: 5px 9px; border: 0; color: #fff0c8; background: rgba(82,48,23,.92); box-shadow: inset 1px 1px 0 #e1a64a, inset -1px -1px 0 #160d08; cursor: pointer; font-size: 12px; }
-#sbrbtn[hidden] { display: none; }
 #party { position: absolute; left: 8px; top: 46px; width: 184px; pointer-events: auto; padding: 5px 6px 6px; background: rgba(15,12,22,.8); box-shadow: inset 1px 1px 0 var(--hi), inset -1px -1px 0 var(--lo), 0 0 0 2px #08060c; }
 #party[hidden], #kbdmsg[hidden] { display: none; }
 .phead { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 3px; }
@@ -396,6 +395,7 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
   #side { position: fixed; right: 0; top: 0; bottom: 0; width: min(330px, 92vw); z-index: 50; transform: translateX(102%); transition: transform .2s ease; box-shadow: -10px 0 30px rgba(0,0,0,.6); }
   body.sideopen #side { transform: none; }
   #sidebtn { display: block; }
+  #sideclose { display: flex; }
   #dock { grid-template-columns: 1fr; }
   #hotbar { grid-template-columns: repeat(10, minmax(0, 1fr)); grid-auto-rows: auto; }
   .hot { width: auto; aspect-ratio: 1; height: auto; } .hot img { width: 80%; height: 80%; left: 10%; top: 10%; }
@@ -403,6 +403,52 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
   .vocs { grid-template-columns: 1fr 1fr; }
   .crow { grid-template-columns: 1fr; }
   .pick { grid-template-columns: 1fr; gap: 3px; }
+}
+@media (max-width: 560px) {
+  html, body { min-height: 100%; }
+  #app { height: 100vh; height: 100dvh; grid-template-rows: minmax(0, 1fr) auto; }
+  #stage { min-height: 180px; }
+  #side { top: env(safe-area-inset-top); bottom: env(safe-area-inset-bottom); width: 100vw; padding: 8px max(10px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
+  #sideclose { min-width: 44px; min-height: 44px; align-self: flex-end; justify-content: center; margin-bottom: -4px; font-size: 22px; }
+  #sidebtn { top: calc(108px + env(safe-area-inset-top)); min-height: 44px; padding-inline: 14px; }
+  #dock { padding: 5px max(8px, env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); gap: 5px; }
+  #hotbar { width: min(100%, 390px); margin: 0 auto; grid-template-columns: repeat(5, minmax(44px, 1fr)); grid-auto-rows: auto; gap: 4px; }
+  .hot { min-width: 44px; min-height: 44px; }
+  #console { height: 58px; }
+  #log { padding: 2px 6px; font-size: 12px; }
+  #chat { min-height: 40px; padding: 7px 8px; font-size: 16px; }
+  #chatf button { min-width: 58px; padding-inline: 10px; }
+  #touch .pad { left: max(12px, env(safe-area-inset-left)); bottom: 14px; width: 124px; height: 124px; }
+  #touch .pad i { left: 42px; top: 42px; width: 40px; height: 40px; }
+  #touch .acts { right: max(12px, env(safe-area-inset-right)); bottom: 18px; gap: 8px; }
+  #touch .acts button { width: 72px; min-height: 48px; font-size: 14px; }
+  #onlinebtn { top: calc(40px + env(safe-area-inset-top)); min-height: 40px; padding-inline: 10px; font-size: 13px; }
+  #clock { top: calc(8px + env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); }
+  #buffs { top: calc(8px + env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); max-width: 48%; }
+  #party { top: calc(48px + env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); width: min(184px, 48vw); }
+  #notices { bottom: 142px; padding-inline: 12px; }
+  .notice { font-size: 14px; }
+  #tabs { gap: 4px; }
+  .tab { flex: 1 1 29%; min-height: 44px; padding: 8px 5px; font-size: 14px; }
+  .btn, .mini, #chatf button { min-height: 40px; }
+  #mm { height: 132px; }
+  #bag { width: 100%; max-width: 360px; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-inline: auto; }
+  #bag .slot { width: auto; height: auto; aspect-ratio: 1; }
+  #bag .slot img { width: calc(100% - 2px); height: auto; aspect-ratio: 1; }
+  .mini { min-width: 38px; height: 38px; }
+}
+@media (max-width: 860px) and (orientation: landscape) and (max-height: 520px) {
+  #app { height: 100vh; height: 100dvh; grid-template-rows: minmax(0, 1fr) auto; }
+  #dock { grid-template-columns: minmax(0, auto) minmax(0, 1fr); align-items: stretch; gap: 6px; padding-bottom: calc(4px + env(safe-area-inset-bottom)); }
+  #hotbar { width: auto; margin: 0; grid-template-columns: repeat(10, minmax(38px, 1fr)); grid-auto-rows: 42px; gap: 3px; }
+  .hot { min-width: 38px; min-height: 42px; }
+  #console { height: 48px; }
+  #log { display: none; }
+  #chat { min-height: 44px; }
+  #touch .pad { width: 96px; height: 96px; }
+  #touch .pad i { left: 30px; top: 30px; }
+  #touch .acts { display: flex; flex-direction: column; }
+  #notices { bottom: 106px; }
 }
 @media (prefers-reduced-motion: reduce) {
   #banner.show, #lvlup.show, .slot.r5::after { animation: none; }
@@ -421,7 +467,6 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
       <div id="bossbar" hidden></div>
       <div id="clock"></div>
       <button id="onlinebtn" type="button" title="Jogadores online"><i class="dot"></i>solo</button>
-      <button id="sbrbtn" type="button" hidden>Steel Ball Run</button>
       <div id="party" hidden></div>
       <div id="banner" hidden><b></b><span></span></div>
       <div id="lvlup" hidden><b></b><span></span></div>
@@ -442,6 +487,7 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
     </div>
   </section>
   <aside id="side">
+    <button id="sideclose" class="btn" type="button" aria-label="Fechar mochila">✕ Fechar</button>
     <header id="me"><div class="who"><span id="mename"></span><span id="mesub"></span></div><div class="bars"></div></header>
     <div id="mmwrap"><canvas id="mm" width="300" height="150"></canvas><div class="mmbar"><span id="zonename"></span><span id="coords"></span><button class="mini" id="mmzout" type="button" title="Afastar">−</button><button class="mini" id="mmzin" type="button" title="Aproximar">+</button><button class="mini" id="mmbig" type="button" title="Mapa do mundo (M)">Mapa</button></div><div class="hint" id="mapname"></div></div>
     <div id="equip"></div>
@@ -2280,6 +2326,14 @@ M('nyx', 'Nyx, Devoradora de Estrelas', 135, B({ t: 'dragon', c: '#0a0a1a', c2: 
   loot: [['nucleo_vazio', 1, 3, 6], ['poeira_estelar', 1, 8, 15], ['u_lamina_nyx', 0.3, 1, 1], ['u_manto_estelar', 0.3, 1, 1], ['u_olho_nyx', 0.25, 1, 1], ['isca_estelar', 1, 5, 10], ['pedra_forja', 1, 5, 8]],
   ab: [{ k: 'beam', elem: 'death', len: 8, mult: 1.9, cd: 5500, tele: 950 }, { k: 'nova', elem: 'energy', r: 3, mult: 1.45, cd: 9000, tele: 1300 }, { k: 'meteor', elem: 'death', n: 8, mult: 1.3, cd: 11000 }, { k: 'summon', mon: 'sombra_estelar', n: 3, cd: 18000 }], res: { death: 80, energy: 50, holy: -10 } });
 
+// Fauna inédita do Mar das Conchas
+M('caranguejo_coral', 'Caranguejo de Coral', 22, B({ t: 'slime', c: '#e86b5b', c2: '#ffb070', c3: '#8f354c' }), { spd: 620, hpM: 1.2, arm: 0, blood: 'green', loot: [['perola_marinha', 0.28, 1, 1], ['concha_colorida', 0.55, 1, 2]], res: { phys: 15, fire: -20, ice: 15 } });
+M('sereia_coral', 'Sereia do Recife', 29, H({ skin: '#8ac8d8', hair: '#235b7a', hairStyle: 2, shirt: '#54aab2', pants: '#28687a' }, {}, { eye: '#c8f8ff' }), { spd: 480, range: 4, keep: 2, proj: 'ice', elem: 'ice', loot: [['perola_marinha', 0.4, 1, 1], ['concha_colorida', 0.35, 1, 2]], res: { ice: 45, fire: -20 } });
+M('corsario_afogado', 'Corsário Afogado', 38, H({ skin: '#7d978e', hair: '#283d45', hairStyle: 4, shirt: '#344850', pants: '#28343c' }, { weapon: { type: 'sword', col: '#91b2bd' } }, { eye: '#8ffff0', scar: true }), { spd: 440, hpM: 1.25, dmgM: 1.15, loot: [['perola_marinha', 0.5, 1, 2], ['concha_colorida', 0.45, 1, 3]], res: { ice: 25, death: 20 } });
+M('leviata', 'Leviatã das Profundezas', 48, B({ t: 'dragon', c: '#17395a', c2: '#55c7d3', c3: '#b8f6e9', horn: '#fff0b0', fire: '#53c9db' }), { boss: true, sc: 1.7, spd: 500, hpM: 6, dmgM: 1.25, elem: 'ice', blood: 'green', loot: [['perola_marinha', 1, 5, 8], ['concha_colorida', 1, 5, 10], ['pedra_forja', 1, 2, 4]], res: { ice: 50, energy: 30, fire: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.35, cd: 8000, tele: 1100 }, { k: 'proj', elem: 'ice', mult: 1.5, cd: 2600 }, { k: 'heal', pct: 0.08, cd: 12000 }] });
+addItem({ id: 'perola_marinha', name: 'Pérola Marinha', cat: 'mat', stack: true, value: 90, icon: ['gem', '#8fe9e6'] });
+addItem({ id: 'concha_colorida', name: 'Concha Colorida', cat: 'mat', stack: true, value: 32, icon: ['shell', '#ff9bc5'] });
+
 // materiais das dimensões
 [
   ['goma_magica', 'Goma Mágica', 'blob', '#ff4a7a', 40], ['bala_goma', 'Bala de Goma', 'blob', '#7fd35a', 25], ['farelo', 'Farelo de Biscoito', 'dust', '#c98b4a', 15],
@@ -3844,6 +3898,10 @@ Object.assign(ZONES, {
   35: { n: 'Mar de Estrelas', lv: [90, 112], mons: [['sombra_estelar', 3], ['devorador_luz', 3], ['olho_cosmico', 2], ['lula_vazio', 2]], dens: 1 / 30, weather: 'sparkle' },
   36: { n: 'Coração do Vazio', lv: [105, 135], mons: [['lula_vazio', 2], ['cavaleiro_vacuo', 3], ['dragao_estelar', 1], ['arauto_nyx', 2]], dens: 1 / 28, weather: 'embers' },
   37: { n: 'Vila Confeitada', safe: true }, 38: { n: 'Refúgio Prismático', safe: true }, 39: { n: 'Observatório do Fim', safe: true },
+  41: { n: 'Recife Azul', lv: [20, 30], mons: [['caranguejo_coral', 4], ['sereia_coral', 2]], dens: 1 / 42, weather: 'rain' },
+  42: { n: 'Naufrágio Esquecido', lv: [30, 42], mons: [['corsario_afogado', 4], ['sereia_coral', 2]], dens: 1 / 36 },
+  43: { n: 'Fenda das Profundezas', lv: [40, 50], mons: [['corsario_afogado', 2]], dens: 1 / 32 },
+  44: { n: 'Porto das Conchas', safe: true },
 });
 Object.assign(WAYSTONES, {
   w_praca: { n: 'Praça das Trocas', m: 'praca', req: 1, realm: 'Praça das Trocas', d: 'Ponto de encontro: trocas, códigos e pesca' },
@@ -4006,6 +4064,8 @@ function genPraca() {
   m.setO(9, 25, O.DEPOT); m.setO(10, 25, O.DEPOT);
   addSign(m, 12, 12, 'Praça das Trocas: clique em outro jogador e escolha Trocar. Anuncie o que você vende com a Leiloeira Bia.');
   addSign(m, 34, 21, 'Lago da Praça: pesca liberada! O Pescador Tião vende varas e compra peixes.');
+  addWarp(m, 40, 19, O.STAIRS_UP, { m: 'mar', a: 'porto' }, 'mar');
+  addSign(m, 34, 24, 'Embarque no píer para explorar o Mar das Conchas. A viagem é recomendada para o nível 20+.');
   m.npcs.push({ id: 'tiao', x: 40, y: 19, town: 'praca' }, { id: 'bia', x: 13, y: 15, town: 'praca' }, { id: 'mestre_codigos', x: 29, y: 15, town: 'praca' }, { id: 'comandante', x: 25, y: 25, town: 'praca' },
     { id: 'guarda', x: 6, y: 18 }, { id: 'guarda', x: 35, y: 32 }, { id: 'aldea', x: 18, y: 26 }, { id: 'crianca', x: 27, y: 11 });
   m.anchors.hub = { x: 21, y: 25 };
@@ -4175,49 +4235,51 @@ Object.assign(MAPGEN, { praca: genPraca, doce: genDoce, cristal: genCristal, vaz
 Object.assign(MAPNAMES, { praca: 'Praça das Trocas', doce: 'Dimensão Doce', cristal: 'Dimensão Cristalina', vazio: 'Dimensão do Vazio' });
 
 // ------------------------------------------------------------
-// Steel Ball Run — pista fixa para corridas globais raras
+// MAR DAS CONCHAS — ilhas, cais, tesouros e fauna marinha
 // ------------------------------------------------------------
-const SBR_PERIOD = 2 * 60 * 60 * 1000;
-const SBR_JOIN_MS = 90000, SBR_RACE_MS = 5 * 60 * 1000;
-const SBR_CHECKPOINTS = [{ x: 11, y: 11 }, { x: 59, y: 11 }, { x: 59, y: 39 }, { x: 11, y: 39 }];
-function sbrServerId() { return NET && NET.sv && NET.sv !== 'lobby' ? NET.sv : UI && UI.selSv || 'aurora'; }
-function sbrEventAt(now, server) {
-  const period = Math.floor(now / SBR_PERIOD);
-  for (let cycle = period; cycle >= period - 1; cycle--) {
-    const startAt = cycle * SBR_PERIOD + 15 * 60 * 1000 + hashStr('quadria-sbr:' + cycle + ':' + server) % (90 * 60 * 1000);
-    const event = { id: 'sbr-' + cycle + '-' + server, startAt, joinAt: startAt - SBR_JOIN_MS, finishAt: startAt + SBR_RACE_MS };
-    if (now >= event.joinAt && now <= event.finishAt) return event;
-  }
-  return null;
-}
-function genSteelBallRun() {
-  const W = 72, H = 50;
-  const m = new GameMap('sbr', 'Steel Ball Run', W, H, { daycycle: true, tint: 'rgba(255,190,90,0.035)' });
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { m.setT(x, y, T.SAND); m.z[m.idx(x, y)] = 41; }
-  // pista em anel: os quatro vãos internos obrigam a completar o circuito.
-  fillRect(m, 7, 7, 58, 7, T.SSTONE);
-  fillRect(m, 58, 10, 7, 30, T.SSTONE);
-  fillRect(m, 7, 36, 58, 7, T.SSTONE);
-  fillRect(m, 7, 10, 7, 30, T.SSTONE);
-  // cânion central e barreiras que impedem atalhos entre os lados da pista.
-  fillRect(m, 16, 17, 7, 16, T.W_SAND);
-  fillRect(m, 30, 14, 7, 19, T.W_SAND);
-  fillRect(m, 44, 17, 7, 16, T.W_SAND);
-  for (const [x, y] of [[8, 8], [63, 8], [63, 41], [8, 41]]) m.setO(x, y, O.BONES);
-  for (let x = 16; x < 57; x += 4) { m.setO(x, 9, O.BANNER, (x / 4) % 3); m.setO(x, 41, O.BANNER, (x / 4) % 3); }
-  for (const [x, y] of [[14, 15], [24, 15], [39, 15], [53, 15], [14, 34], [24, 34], [39, 34], [53, 34]]) m.setO(x, y, O.CACTUS);
-  // largada/chegada, retorno e ancoragem dos corredores.
-  m.setO(9, 23, O.BANNER, 1);
-  for (const [x, y] of [[11, 11], [59, 11], [59, 39], [11, 39]]) m.setO(x, y, O.BANNER, 2);
-  addSign(m, 18, 12, 'Steel Ball Run: siga os quatro estandartes na ordem e volte à linha de chegada.');
-  addWarp(m, 4, 24, O.STAIRS_UP, { m: 'ov', a: 'hub' }, 'return');
-  m.anchors.start = { x: 10, y: 23 };
-  m.anchors.hub = { x: 10, y: 23 };
-  for (let y = 3; y < H - 3; y++) for (let x = 3; x < W - 3; x++) m.pz[m.idx(x, y)] = 1;
+function genSea() {
+  const W = 90, H = 62;
+  const m = new GameMap('mar', 'Mar das Conchas', W, H, { daycycle: true, tint: 'rgba(36,135,190,0.06)' });
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { m.setT(x, y, T.DEEP); m.z[m.idx(x, y)] = 41; }
+  const island = (cx, cy, rx, ry, zone, safe) => {
+    for (let y = Math.max(2, cy - ry - 2); y <= Math.min(H - 3, cy + ry + 2); y++) for (let x = Math.max(2, cx - rx - 2); x <= Math.min(W - 3, cx + rx + 2); x++) {
+      const d = Math.sqrt(((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2) + (hash2(x, y, 741 + zone) - 0.5) * 0.12;
+      if (d > 1.08) continue;
+      const i = m.idx(x, y); m.setT(x, y, d > 0.79 ? T.SAND : T.GRASS); m.z[i] = zone;
+      if (safe && d < 0.88) m.pz[i] = 1;
+    }
+  };
+  island(12, 32, 10, 11, 44, true);
+  island(37, 13, 12, 9, 41, false);
+  island(47, 43, 14, 11, 42, false);
+  island(76, 30, 12, 13, 43, false);
+  // Píer do porto e cais que ligam os três pontos de exploração.
+  fillRect(m, 4, 31, 6, 3, T.DOCK); fillRect(m, 16, 31, 6, 3, T.DOCK);
+  fillRect(m, 27, 18, 5, 3, T.DOCK); fillRect(m, 42, 17, 5, 3, T.DOCK);
+  fillRect(m, 35, 33, 5, 3, T.DOCK); fillRect(m, 54, 42, 5, 3, T.DOCK);
+  fillRect(m, 62, 31, 5, 3, T.DOCK);
+  addWarp(m, 7, 32, O.STAIRS_UP, { m: 'praca', a: 'hub' }, 'volta');
+  addWarp(m, 19, 32, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'porto');
+  addWarp(m, 29, 19, O.STAIRS_UP, { m: 'mar', a: 'porto' }, 'recife_volta');
+  addWarp(m, 44, 18, O.STAIRS_UP, { m: 'mar', a: 'nau' }, 'recife');
+  addWarp(m, 37, 34, O.STAIRS_UP, { m: 'mar', a: 'recife' }, 'nau_volta');
+  addWarp(m, 57, 43, O.STAIRS_UP, { m: 'mar', a: 'fenda' }, 'nau');
+  addWarp(m, 64, 32, O.STAIRS_UP, { m: 'mar', a: 'nau' }, 'fenda');
+  m.anchors.hub = { x: 12, y: 32 };
+  addSign(m, 10, 28, 'Mar das Conchas: explore os cais, abra os baús e procure a Pérola do Leviatã. Recife recomendado: nível 20+.');
+  addSign(m, 34, 11, 'Recife Azul — criaturas marinhas e baús de conchas.');
+  addSign(m, 44, 40, 'Naufrágio Esquecido — corsários afogados protegem os tesouros.');
+  addSign(m, 73, 26, 'Fenda das Profundezas — o Leviatã desperta nas águas escuras.');
+  for (const [x, y] of [[9, 24], [16, 26], [8, 39], [17, 39]]) m.setO(x, y, O.PALM);
+  for (const [x, y] of [[35, 10], [39, 14], [32, 15], [42, 12], [45, 44], [50, 40]]) m.setO(x, y, O.SHELL);
+  for (const [x, y] of [[42, 43], [49, 45], [52, 40], [55, 44]]) m.setO(x, y, O.BARREL);
+  addChest(m, 12, 35, 'wood', 20); addChest(m, 35, 13, 'wood', 24); addChest(m, 40, 12, 'gold', 28);
+  addChest(m, 46, 45, 'wood', 34); addChest(m, 52, 41, 'gold', 38); addChest(m, 74, 34, 'gold', 46);
+  m.spawns.push({ mon: 'leviata', x: 77, y: 27, boss: true });
   return m;
 }
-MAPGEN.sbr = genSteelBallRun;
-MAPNAMES.sbr = 'Steel Ball Run';
+MAPGEN.mar = genSea;
+MAPNAMES.mar = 'Mar das Conchas';
 
 // ---- 40-game.js ----
 // ============================================================
@@ -4430,25 +4492,11 @@ function itemLines(it, p) {
 // ------------------------------------------------------------
 // personagem
 // ------------------------------------------------------------
-const MOUNTS = {
-  dunerunner: { n: 'Corcel das Dunas', c: '#b87942', price: 2, d: 'Montaria veloz, criada para atravessar a areia.' },
-  cactuskip: { n: 'Saltador de Cacto', c: '#6f9b4d', price: 4, d: 'Pequeno, resistente e surpreendentemente rápido.' },
-  starlight: { n: 'Corcel Estelar', c: '#68bcd4', price: 6, d: 'Uma montaria rara com brilho celeste.' },
-};
 const STANDS = {
-  bulwark: { n: 'Bulwark', c: '#72b8a0', price: 4, passive: 'Armadura +3', ability: 'Guardião: reduz o dano recebido por 5 s.', cd: 30000 },
-  flare: { n: 'Flare', c: '#ff8a48', price: 5, passive: 'Poder mágico +5%', ability: 'Rajada: golpe de energia no alvo próximo.', cd: 18000 },
+  bulwark: { n: 'Bulwark', c: '#72b8a0', price: 3, passive: 'Armadura +3', ability: 'Guardião: reduz o dano recebido por 5 s.', cd: 30000 },
+  flare: { n: 'Flare', c: '#ff8a48', price: 4, passive: 'Poder mágico +5%', ability: 'Rajada: golpe de energia no alvo próximo.', cd: 18000 },
   mender: { n: 'Mender', c: '#86d887', price: 5, passive: 'Regeneração +2', ability: 'Pulso vital: recupera 30% da vida máxima.', cd: 25000 },
 };
-function hasMount(p, id) { return !!(p && Array.isArray(p.mounts) && p.mounts.includes(id) && MOUNTS[id]); }
-function activeMount(p) { return p && hasMount(p, p.mount) ? MOUNTS[p.mount] : null; }
-function mountDismount(reason) {
-  const p = G.p;
-  if (!p || !p.mount) return;
-  p.mount = null; G.saveDirty = true; NET.lastPres = '';
-  if (reason) log('Você desmontou: ' + reason + '.', 'sys');
-  netPresence(); G.dirty.peers = 1;
-}
 function newPlayer(name, voc, look) {
   const V = VOC[voc];
   const p = { id: G.nextId++, kind: 'player', name, voc, look, lvl: 1, xp: 0, hp: 1, mp: 1, maxHp: 1, maxMp: 1, gold: 60,
@@ -4459,7 +4507,7 @@ function newPlayer(name, voc, look) {
     atkReady: 0, gcd: 0, potCd: 0, lastCombat: -1e9, dead: false, path: null, pending: null,
     stats: { kills: 0, deaths: 0, playT: 0, chests: 0, bosses: 0, maxHit: 0, fish: 0 }, created: Date.now(),
     fish: [], fishCap: FISH_CAP0, fdex: {}, fdexRew: {}, fishing: { lvl: 1, xp: 0 }, bait: null, codes: {},
-    mounts: [], mount: null, stands: [], stand: null, standReadyAt: 0, eventTokens: 0, sbrRewards: [] };
+    stands: [], stand: null, standReadyAt: 0, seaPearls: 0 };
   for (const slot in V.start) p.eq[slot] = makeItem(V.start[slot], 0);
   const mage = voc === 'sorcerer' || voc === 'druid';
   addToBag(p, makeItem('pot_hp1', 0, 6));
@@ -4524,7 +4572,6 @@ function speedFactor(a) {
 function stepDur(a, dx, dy, base) {
   const m = G.maps[a.map];
   let d = (base || 300) / speedFactor(a);
-  if (a === G.p && activeMount(a) && G.t - a.lastCombat > 6000) d /= 1.2;
   const t = TILE[m.tile(a.x + dx, a.y + dy)];
   if (t && t.slow) d *= t.slow;
   if (dx && dy) d *= 1.35;
@@ -4788,7 +4835,6 @@ function arrivalNear(m, x, y) {
 }
 function changeMap(id, where) {
   const p = G.p, old = G.map;
-  if (old && old.id === 'sbr' && id !== 'sbr' && p && p.race) { p.race = null; G.saveDirty = true; }
   const m = getMap(id);
   let pos = where && where.a ? m.anchors[where.a] : where;
   if (!pos) pos = m.anchors.hub || m.anchors.up || { x: m.w >> 1, y: m.h >> 1 };
@@ -4988,7 +5034,6 @@ function damagePlayer(raw, el, src, o) {
   const p = G.p;
   o = o || {};
   if (!p || p.dead || G.godMode) return 0;
-  if (p.mount) mountDismount('entrou em combate');
   if (G.map.pz[G.map.idx(p.x, p.y)]) return 0;
   const s = p.st;
   if (el === 'phys' && (o.melee || o.ranged) && s.block > 0 && Math.random() * 100 < s.block) {
@@ -5130,7 +5175,6 @@ function playerAutoAttack() {
   if (w.range > 1 && !los(m, p.x, p.y, t.x, t.y)) return;
   p.atkReady = G.t + atkInterval(p);
   p.lastCombat = G.t;
-  if (p.mount) mountDismount('entrou em combate');
   faceTo(p, t);
   if (t.def.passive) t.provoked = G.t;
   if (w.skill === 'magic') {
@@ -5174,7 +5218,6 @@ function castSpell(id) {
   p.cds[id] = G.t + sp.cd * (1 - Math.min(40, p.st.cdr) / 100);
   p.gcd = G.t + 850;
   p.lastCombat = G.t;
-  if (p.mount) mountDismount('usou uma habilidade em combate');
   say(p, sp.w, '#ffb04a', true);
   if (t) faceTo(p, t);
   G.dirty.hot = 1;
@@ -5446,7 +5489,6 @@ function killMonster(mn, by) {
 function playerDie(src) {
   const p = G.p;
   if (p.dead) return;
-  if (p.race) sbrLeave();
   p.dead = true; p.hp = 0;
   G.lastKiller = src && src.def ? src.def.name || src.def.n : '?';
   const lost = Math.round((xpFor(p.lvl + 1) - xpFor(p.lvl)) * 0.12);
@@ -5929,6 +5971,7 @@ function openChest(x, y) {
   const loot = chestLoot(c.kind, Math.max(c.lvl, Math.min(p.lvl, c.lvl + 6)));
   c.t = Date.now() + (c.kind === 'gold' ? 20 : 8) * 60000;
   p.chests[m.id + ':' + i] = c.t;
+  if (m.id === 'mar') { const pearls = c.kind === 'gold' ? 3 : 1; p.seaPearls = (p.seaPearls || 0) + pearls; notice('Você encontrou ' + pearls + (pearls === 1 ? ' pérola do mar!' : ' pérolas do mar!'), '#8fe9e6'); log('Tesouro marítimo: +' + pearls + ' pérolas do mar.', 'sys'); }
   m.setO(x, y, c.kind === 'gold' ? O.GCHEST_OPEN : O.CHEST_OPEN);
   p.stats.chests++;
   sfx('chest');
@@ -6226,9 +6269,9 @@ function serialize() {
   for (const k in p.chests) if (p.chests[k] > Date.now()) chests[k] = p.chests[k];
   return { v: 1, t: Date.now(), name: p.name, voc: p.voc, look: p.look, lvl: p.lvl, xp: p.xp, hp: Math.round(p.hp), mp: Math.round(p.mp), gold: p.gold,
     skills: p.skills, eq: p.eq, bag: p.bag, depot: p.depot, hot: p.hot, quests: p.quests, tasks: p.tasks, kills: p.kills, ways: p.ways, temple: p.temple,
-    buffs, chests, seen: p.seen, stats: p.stats, escrow: p.escrow && p.escrow.length ? p.escrow : undefined, pos: p.map === 'sbr' ? { m: 'ov', x: TEMPLES.aurora.x, y: TEMPLES.aurora.y, dead: false } : isRaidMap(p.map) && !p.dead ? { m: 'praca', x: 14, y: 26, dead: false } : { m: p.dead ? templeFor(p.temple).m : p.map, x: p.x, y: p.y, dead: p.dead }, raids: p.raids, guild: p.guild, admin: p.admin ? 1 : 0, opt: G.opt, explore, dayT: G.dayT, created: p.created,
+    buffs, chests, seen: p.seen, stats: p.stats, escrow: p.escrow && p.escrow.length ? p.escrow : undefined, pos: isRaidMap(p.map) && !p.dead ? { m: 'praca', x: 14, y: 26, dead: false } : { m: p.dead ? templeFor(p.temple).m : p.map, x: p.x, y: p.y, dead: p.dead }, raids: p.raids, guild: p.guild, admin: p.admin ? 1 : 0, opt: G.opt, explore, dayT: G.dayT, created: p.created,
     fish: p.fish, fishCap: p.fishCap, fdex: p.fdex, fdexRew: p.fdexRew, fishing: p.fishing, bait: p.bait, codes: p.codes,
-    mounts: p.mounts, mount: p.mount, stands: p.stands, stand: p.stand, standReadyAt: p.standReadyAt, eventTokens: p.eventTokens, sbrRewards: p.sbrRewards };
+    stands: p.stands, stand: p.stand, standReadyAt: p.standReadyAt, seaPearls: p.seaPearls };
 }
 function validItem(it) { return it && ITEMS[it.b] ? it : null; }
 function deserialize(s) {
@@ -6262,13 +6305,10 @@ function deserialize(s) {
   p.fishing = { lvl: clamp((s.fishing && s.fishing.lvl) | 0, 1, 100) || 1, xp: Math.max(0, +(s.fishing && s.fishing.xp) || 0) };
   p.bait = own(BAIT, s.bait) ? s.bait : null;
   p.codes = s.codes && typeof s.codes === 'object' ? s.codes : {};
-  p.mounts = Array.isArray(s.mounts) ? [...new Set(s.mounts.filter((id) => own(MOUNTS, id)))].slice(0, 20) : [];
-  p.mount = p.mounts.includes(s.mount) ? s.mount : null;
   p.stands = Array.isArray(s.stands) ? [...new Set(s.stands.filter((id) => own(STANDS, id)))].slice(0, 20) : [];
   p.stand = p.stands.includes(s.stand) ? s.stand : null;
   p.standReadyAt = Math.max(0, +s.standReadyAt || 0);
-  p.eventTokens = clamp(Math.floor(+s.eventTokens || 0), 0, 1e6);
-  p.sbrRewards = Array.isArray(s.sbrRewards) ? [...new Set(s.sbrRewards.filter((id) => typeof id === 'string' && /^sbr-\d+-[a-z0-9-]{2,30}$/.test(id)))].slice(-30) : [];
+  p.seaPearls = clamp(Math.floor(+s.seaPearls || 0) + Math.floor(+s.eventTokens || 0), 0, 1e6);
   p.raids = s.raids && typeof s.raids === 'object' ? s.raids : {};
   p.admin = s.admin === 1 && isAdminName(p.name) ? 1 : 0;
   const gs = s.guild;
@@ -7326,7 +7366,6 @@ function actorSprite(a, now) {
 }
 function drawActor(g, a, camPX, camPY, S, now) {
   const { img, sc } = actorSprite(a, now);
-  const moving = a.mt < 1;
   const w = img.width * sc, h = img.height * sc;
   let fx = a.rx * 16 + 8, fy = a.ry * 16 + 16;
   if ((a.kind === 'player' || a.kind === 'peer') && a.swingT && G.t - a.swingT < 140) { const d = DIRS[a.dir]; fx += d[0] * 2; fy += d[1] * 2; }
@@ -7338,8 +7377,6 @@ function drawActor(g, a, camPX, camPY, S, now) {
   g.beginPath();
   g.ellipse((fx - camPX) * S, (fy - 1.5 - camPY) * S, Math.max(4, w * 0.32) * S, 2.3 * S * sc, 0, 0, Math.PI * 2);
   g.fill();
-  const mountId = a.kind === 'player' || a.kind === 'peer' ? a.mount : null;
-  if (mountId && MOUNTS[mountId]) drawMount(g, mountId, fx, fy, camPX, camPY, S, now, moving, a.face);
   const standId = a.kind === 'player' || a.kind === 'peer' ? a.stand : null;
   if (standId && STANDS[standId]) {
     g.save(); g.globalAlpha = 0.28; g.strokeStyle = STANDS[standId].c; g.lineWidth = 1.5 * S;
@@ -7356,17 +7393,6 @@ function drawActor(g, a, camPX, camPY, S, now) {
   if (a.flash > G.t) { g.globalAlpha = 0.72; g.drawImage(whiteOf(img), dx, dy, w * S, h * S); g.globalAlpha = 1; }
   if (a.boss && Math.random() < 0.3) G.parts.push({ x: a.rx + rndf(0, 1), y: a.ry + rndf(-0.6, 1), vx: rndf(-0.2, 0.2), vy: rndf(-1.2, -0.4), life: 700, max: 700, col: a.def.light ? '#ffb04a' : '#bd7bff', sz: 1, g: 0 });
   a._hx = (fx - camPX) * S; a._hy = dy + (a.kind === 'player' || a.kind === 'peer' || a.kind === 'npc' || (a.def && a.def.look.h) ? 3 * S * sc : 0);
-}
-function drawMount(g, id, fx, fy, camPX, camPY, S, now, moving, face) {
-  const M = MOUNTS[id]; if (!M) return;
-  const x = Math.round((fx - camPX) * S), y = Math.round((fy - 7 - camPY) * S);
-  const bob = moving ? Math.round(Math.sin(now / 85) * S) : 0;
-  g.save(); g.translate(x, y + bob); if (face < 0) { g.translate(20 * S, 0); g.scale(-1, 1); }
-  g.fillStyle = '#50351f'; g.fillRect(4 * S, 2 * S, 11 * S, 6 * S);
-  g.fillStyle = M.c; g.fillRect(3 * S, 3 * S, 12 * S, 5 * S); g.fillRect(12 * S, 1 * S, 5 * S, 4 * S);
-  g.fillStyle = shade(M.c, -0.24); g.fillRect(5 * S, 8 * S, 2 * S, 4 * S); g.fillRect(12 * S, 8 * S, 2 * S, 4 * S);
-  g.fillStyle = '#f1d7a2'; g.fillRect(16 * S, 1 * S, S, S); g.fillRect(2 * S, 3 * S, 2 * S, S);
-  g.restore();
 }
 function drawProj(g, pr, camPX, camPY, S) {
   const k = clamp((G.t - pr.t0) / pr.dur, 0, 1);
@@ -8080,7 +8106,7 @@ UI.init = () => {
   UI.hpb = bar('hp'); UI.mpb = bar('mp'); UI.xpb = bar('xp');
   me.querySelector('.bars').append(UI.hpb, UI.mpb, UI.xpb);
   // abas
-  const tabs = [['status', 'Status'], ['spells', 'Magias'], ['quests', 'Missões'], ['pesca', 'Pesca'], ['bestiary', 'Bestiário'], ['online', 'Online'], ['mounts', 'Montarias'], ['stands', 'Stands'], ['opts', 'Opções']];
+  const tabs = [['status', 'Status'], ['spells', 'Magias'], ['quests', 'Missões'], ['pesca', 'Pesca'], ['bestiary', 'Bestiário'], ['online', 'Online'], ['stands', 'Stands'], ['opts', 'Opções']];
   const nav = $('#tabs');
   for (const [k, n] of tabs) {
     const b = el('button', 'tab' + (k === UI.tab ? ' on' : ''), n); b.type = 'button'; b.dataset.t = k;
@@ -8101,6 +8127,7 @@ UI.init = () => {
   });
   $('#sortbag').addEventListener('click', () => { if (G.p) { sortBag(G.p); sfx('equip'); } });
   $('#sidebtn').addEventListener('click', () => UI.toggleSide());
+  $('#sideclose').addEventListener('click', () => UI.toggleSide());
   $('#chatf').addEventListener('submit', (e) => { e.preventDefault(); const inp = $('#chat'); const v = inp.value.trim(); inp.value = ''; inp.blur(); if (v && G.started) chatCommand(v); });
   $('#chat').addEventListener('keydown', (e) => { if (e.key === 'Escape') e.target.blur(); });
   $('#respawn').addEventListener('click', () => { $('#death').hidden = true; respawnPlayer(); });
@@ -8108,7 +8135,6 @@ UI.init = () => {
   initTouch();
   buildTitle();
   $('#onlinebtn').addEventListener('click', (e) => { e.stopPropagation(); audioInit(); sfx('click'); UI.showOnline(); });
-  $('#sbrbtn').addEventListener('click', (e) => { e.stopPropagation(); sbrJoin(); });
   // depois de clicar num botão, o foco volta para o jogo (Espaço/Enter não "re-clicam" e WASD segue funcionando)
   document.addEventListener('click', (e) => {
     if (!G.started) return;
@@ -8455,35 +8481,18 @@ function renderTarget() {
 // ------------------------------------------------------------
 // abas
 // ------------------------------------------------------------
-function renderMountsTab(box) {
-  const p = G.p;
-  box.append(el('h4', null, 'Montarias'), el('p', 'hint', 'A corrida Steel Ball Run rende fichas. Montarias dão 20% mais velocidade fora de combate.'));
-  const tokens = el('div', 'kv'); tokens.append(el('span', null, 'Fichas da corrida'), el('b', null, fmt(p.eventTokens || 0))); box.appendChild(tokens);
-  const card = (id, M) => {
-    const r = el('div', 'quest' + (p.mount === id ? ' ready' : ''));
-    r.append(el('b', null, M.n), el('p', null, M.d), el('small', null, hasMount(p, id) ? (p.mount === id ? 'Equipado' : 'Na sua coleção') : 'Custa ' + M.price + ' fichas'));
-    const action = hasMount(p, id) ? btn(p.mount === id ? 'Desmontar' : 'Equipar', () => {
-      p.mount = p.mount === id ? null : id; G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
-    }, p.mount === id ? '' : 'pri') : btn('Resgatar', () => {
-      if ((p.eventTokens || 0) < M.price) return notice('Faltam fichas da corrida.', '#ff8a6a');
-      p.eventTokens -= M.price; p.mounts.push(id); p.mount = id; G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
-    }, 'pri');
-    r.appendChild(action); box.appendChild(r);
-  };
-  for (const [id, M] of Object.entries(MOUNTS)) card(id, M);
-}
 function renderStandsTab(box) {
   const p = G.p;
   box.append(el('h4', null, 'Stands'), el('p', 'hint', 'Equipe um stand para receber seu bônus passivo e usar sua habilidade ativa.'));
-  const tokens = el('div', 'kv'); tokens.append(el('span', null, 'Fichas da corrida'), el('b', null, fmt(p.eventTokens || 0))); box.appendChild(tokens);
+  const tokens = el('div', 'kv'); tokens.append(el('span', null, 'Pérolas do mar'), el('b', null, fmt(p.seaPearls || 0))); box.appendChild(tokens);
   for (const [id, S] of Object.entries(STANDS)) {
     const r = el('div', 'quest' + (p.stand === id ? ' ready' : ''));
-    r.append(el('b', null, S.n), el('p', null, S.passive + ' · ' + S.ability), el('small', null, p.stands.includes(id) ? (p.stand === id ? 'Equipado' : 'Na sua coleção') : 'Custa ' + S.price + ' fichas'));
+    r.append(el('b', null, S.n), el('p', null, S.passive + ' · ' + S.ability), el('small', null, p.stands.includes(id) ? (p.stand === id ? 'Equipado' : 'Na sua coleção') : 'Custa ' + S.price + ' pérolas'));
     const action = p.stands.includes(id) ? btn(p.stand === id ? 'Desequipar' : 'Equipar', () => {
       p.stand = p.stand === id ? null : id; calcStats(p); G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
     }, p.stand === id ? '' : 'pri') : btn('Resgatar', () => {
-      if ((p.eventTokens || 0) < S.price) return notice('Faltam fichas da corrida.', '#ff8a6a');
-      p.eventTokens -= S.price; p.stands.push(id); p.stand = id; calcStats(p); G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
+      if ((p.seaPearls || 0) < S.price) return notice('Faltam pérolas do mar.', '#ff8a6a');
+      p.seaPearls -= S.price; p.stands.push(id); p.stand = id; calcStats(p); G.saveDirty = true; NET.lastPres = ''; netPresence(); saveGame(); renderTab(true);
     }, 'pri');
     r.appendChild(action);
     if (p.stand === id) r.appendChild(btn('Usar habilidade', useStandAbility, 'pri'));
@@ -8493,7 +8502,7 @@ function renderStandsTab(box) {
 function useStandAbility() {
   const p = G.p, S = p && STANDS[p.stand];
   if (!p || !S || !p.stands.includes(p.stand)) return notice('Equipe um stand primeiro.', '#c8b8a0');
-  if (p.dead || G.map.id === 'sbr') return notice('Essa habilidade não pode ser usada agora.', '#ff8a6a');
+  if (p.dead) return notice('Essa habilidade não pode ser usada agora.', '#ff8a6a');
   if (Date.now() < (p.standReadyAt || 0)) return notice('O stand ainda está se recuperando.', '#c8b8a0');
   if (p.stand === 'bulwark') {
     p.buffs.standGuard = G.t + 5000; addFx(p.x, p.y, 'holy');
@@ -8600,8 +8609,6 @@ function renderTab(force) {
     box.appendChild(grid);
   } else if (UI.tab === 'online') {
     renderOnline(box);
-  } else if (UI.tab === 'mounts') {
-    renderMountsTab(box);
   } else if (UI.tab === 'stands') {
     renderStandsTab(box);
   } else if (UI.tab === 'pesca') {
@@ -10848,9 +10855,7 @@ function netPresence() {
     n: myNetName(), v: p.voc, l: p.lvl, m: p.map, x: p.x, y: p.y, d: p.dir, f: p.face, lk: p.look, eq: compactGear(p),
     h: Math.round(clamp(p.hp / p.maxHp, 0, 1) * 100), dd: p.dead ? 1 : 0, px: Math.floor(p.stats.killXp || 0),
   };
-  if (hasMount(p, p.mount)) pres.mt = p.mount;
   if (p.stand && Array.isArray(p.stands) && p.stands.includes(p.stand) && STANDS[p.stand]) pres.sd = p.stand;
-  if (p.race && p.race.id) pres.sbr = { id: p.race.id, cp: p.race.cp | 0, joinedAt: p.race.joinedAt | 0, finishedAt: p.race.finishedAt | 0 };
   if (NET.say) pres.s = NET.say;
   if (NET.pt) pres.pt = NET.pt;
   const now = Date.now();
@@ -10910,10 +10915,7 @@ function onPeers(ch) {
     a.name = nm && !FILTER.badName(nm) ? nm : 'Aventureiro';
     a.by = pe.by || null; a.mkey = pe.by ? 'u:' + pe.by : 'p:' + pe.peer;
     a.voc = own(VOC, q.v) ? q.v : 'knight'; a.lvl = clamp(q.l | 0, 1, 999); a.map = own(MAPGEN, q.m) ? q.m : 'ov';
-    a.mount = MOUNTS[q.mt] ? q.mt : null; a.stand = STANDS[q.sd] ? q.sd : null;
-    a.race = q.sbr && typeof q.sbr.id === 'string' && /^sbr-[\w-]{1,80}$/.test(q.sbr.id)
-      ? { id: q.sbr.id, cp: clamp(q.sbr.cp | 0, 0, 4), joinedAt: Math.max(0, q.sbr.joinedAt | 0), finishedAt: Math.max(0, q.sbr.finishedAt | 0) }
-      : null;
+    a.stand = STANDS[q.sd] ? q.sd : null;
     a.dir = clamp(q.d | 0, 0, 3); a.face = q.f < 0 ? -1 : 1; a.dead = !!q.dd; a.guest = !!pe.guest; a.mine = !!pe.isMe;
     a.hp = clamp(+q.h || 0, 0, 100); a.maxHp = 100;
     const key = JSON.stringify([look, gear]);
@@ -11289,93 +11291,9 @@ function safeGear(eq) {
   return out;
 }
 function netTickGuild() { guildPublish(); }
-function sbrRank() {
-  const p = G.p, id = p && p.race && p.race.id;
-  if (!id) return [];
-  const list = [{ id: NET.me || 'me', name: myNetName(), cp: p.race.cp | 0, finishedAt: p.race.finishedAt | 0, mine: true }];
-  for (const a of G.peers.values()) if (a.race && a.race.id === id) list.push({ id: a.peer, name: a.name || 'Aventureiro', cp: a.race.cp | 0, finishedAt: a.race.finishedAt | 0 });
-  return list.sort((a, b) => (a.finishedAt || Infinity) - (b.finishedAt || Infinity) || b.cp - a.cp);
-}
-function sbrHud() {
-  const b = $('#sbrbtn'); if (!b || !G.p || !G.started) { if (b) b.hidden = true; return; }
-  const ev = sbrEventAt(Date.now(), sbrServerId()), race = G.p.race;
-  if (!ev) { b.hidden = true; return; }
-  b.hidden = false;
-  const joined = race && race.id === ev.id;
-  const until = Math.max(0, ev.startAt - Date.now());
-  const text = joined
-    ? (race.finishedAt ? 'Chegada · ' + (sbrRank().findIndex((x) => x.mine) + 1) + 'º lugar' : 'Steel Ball Run · CP ' + race.cp + '/4 · ' + (sbrRank().findIndex((x) => x.mine) + 1) + 'º')
-    : (until > 0 ? 'Steel Ball Run · começa em ' + Math.ceil(until / 1000) + 's' : 'Steel Ball Run · entrar');
-  if (b.textContent !== text) b.textContent = text;
-  b.disabled = !joined && Date.now() >= ev.startAt;
-}
-function sbrJoin() {
-  const p = G.p, now = Date.now(), ev = sbrEventAt(now, sbrServerId());
-  if (!p || !G.started || p.dead) return notice('Entre no jogo com seu personagem primeiro.', '#ff8a6a');
-  if (!NET.room) return notice('Conecte-se a um servidor online para disputar com outras pessoas.', '#ff8a6a');
-  if (!ev || now >= ev.startAt) return notice('A janela de inscrição fechou. Volte na próxima Steel Ball Run.', '#ff8a6a');
-  if (p.race && p.race.id === ev.id) return notice('Você já está inscrito nesta corrida.', '#c8b8a0');
-  p.race = { id: ev.id, cp: 0, joinedAt: now, finishedAt: 0 };
-  mountDismount('a corrida começou');
-  changeMap('sbr', { a: 'start' });
-  NET.lastPres = ''; netPresence(); saveGame();
-  notice('Inscrito! A largada acontece em breve. Complete os 4 pontos e volte à faixa!', '#f3cd78');
-  sbrHud();
-}
-function sbrStep() {
-  const p = G.p, race = p && p.race;
-  if (!race || race.finishedAt || G.map.id !== 'sbr') return;
-  const ev = sbrEventAt(Date.now(), sbrServerId());
-  if (!ev || ev.id !== race.id || Date.now() < ev.startAt) return;
-  const cp = SBR_CHECKPOINTS[race.cp];
-  if (cp && Math.max(Math.abs(p.x - cp.x), Math.abs(p.y - cp.y)) <= 3) {
-    race.cp++; G.saveDirty = true; NET.lastPres = ''; netPresence();
-    notice('Ponto ' + race.cp + ' de 4!', '#f3cd78');
-  }
-  if (race.cp >= 4 && p.x >= 7 && p.x <= 14 && p.y >= 19 && p.y <= 27) sbrFinish();
-}
-function sbrFinish() {
-  const p = G.p, race = p && p.race;
-  if (!race || race.finishedAt) return;
-  race.finishedAt = Date.now(); G.saveDirty = true; NET.lastPres = ''; netPresence();
-  const rank = sbrRank().findIndex((x) => x.mine) + 1;
-  notice(rank === 1 ? 'Você cruzou a chegada em primeiro!' : 'Você cruzou a chegada em ' + rank + 'º lugar!', rank === 1 ? '#ffdc78' : '#a8f0d0');
-  sbrHud(); sbrAward(); saveGame();
-}
-function sbrAward() {
-  const p = G.p, race = p && p.race;
-  if (!race || !race.finishedAt || race.rewarded) return;
-  const ranked = sbrRank(), winner = ranked.length > 1 && ranked[0].mine;
-  if ((p.sbrRewards || []).includes(race.id)) { race.rewarded = true; return; }
-  p.eventTokens = Math.max(0, p.eventTokens | 0) + 1 + (winner ? 2 : 0);
-  p.sbrRewards = (p.sbrRewards || []).concat(race.id).slice(-30);
-  race.rewarded = true; G.saveDirty = true;
-  notice(winner ? 'Prêmio: 3 fichas (chegada em primeiro)!' : 'Prêmio: 1 ficha de participação.', '#f3cd78');
-  log(winner ? 'Steel Ball Run vencida: +3 fichas.' : 'Steel Ball Run concluída: +1 ficha.', 'sys');
-  NET.lastPres = ''; netPresence(); saveGame();
-}
-function sbrLeave() {
-  const p = G.p; if (!p || !p.race) return;
-  p.race = null; G.saveDirty = true; NET.lastPres = ''; netPresence();
-}
-function sbrTick() {
-  const p = G.p;
-  if (!p) return;
-  const now = Date.now(), ev = sbrEventAt(now, sbrServerId());
-  sbrHud();
-  if (!p.race) return;
-  if (!ev || ev.id !== p.race.id || p.dead) {
-    const wasOnTrack = G.map && G.map.id === 'sbr'; sbrLeave();
-    if (wasOnTrack && !p.dead) changeMap('ov', { a: 'hub' });
-    return;
-  }
-  if (G.map.id === 'sbr' && now >= ev.startAt) sbrStep();
-  if (p.race && p.race.finishedAt) sbrAward();
-}
 function netTick(dt) {
   netTickGuild();
   for (const a of G.peers.values()) advance(a, dt);
-  sbrTick();
   if (!NET.room) return;
   if (G.t - NET.presQ > 500) { NET.presQ = G.t; netPresence(); }
   if (NET.pt && G.t - (NET.ptT || 0) > 2000) { NET.ptT = G.t; partyCheck(); }

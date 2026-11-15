@@ -2333,6 +2333,10 @@ M('corsario_afogado', 'Corsário Afogado', 38, H({ skin: '#7d978e', hair: '#283d
 M('leviata', 'Leviatã das Profundezas', 48, B({ t: 'dragon', c: '#17395a', c2: '#55c7d3', c3: '#b8f6e9', horn: '#fff0b0', fire: '#53c9db' }), { boss: true, sc: 1.7, spd: 500, hpM: 6, dmgM: 1.25, elem: 'ice', blood: 'green', loot: [['perola_marinha', 1, 5, 8], ['concha_colorida', 1, 5, 10], ['pedra_forja', 1, 2, 4]], res: { ice: 50, energy: 30, fire: -25 }, ab: [{ k: 'nova', elem: 'ice', r: 2, mult: 1.35, cd: 8000, tele: 1100 }, { k: 'proj', elem: 'ice', mult: 1.5, cd: 2600 }, { k: 'heal', pct: 0.08, cd: 12000 }] });
 addItem({ id: 'perola_marinha', name: 'Pérola Marinha', cat: 'mat', stack: true, value: 90, icon: ['gem', '#8fe9e6'] });
 addItem({ id: 'concha_colorida', name: 'Concha Colorida', cat: 'mat', stack: true, value: 32, icon: ['shell', '#ff9bc5'] });
+addItem({ id: 'fragmento_cometa', name: 'Fragmento de Cometa', cat: 'mat', stack: true, value: 240, icon: ['gem', '#ffb45c'] });
+addItem({ id: 'essencia_tempestade', name: 'Essência da Tempestade', cat: 'mat', stack: true, value: 360, icon: ['dust', '#7edfff'] });
+addItem({ id: 'selo_caos', name: 'Selo do Caos', cat: 'mat', stack: true, value: 500, icon: ['heart', '#d982ff'] });
+addItem({ id: 'caixa_caos', name: 'Caixa do Caos', cat: 'mat', stack: true, value: 1200, icon: ['crown', '#ffcf5a'] });
 
 // materiais das dimensões
 [
@@ -2353,6 +2357,10 @@ U2('u_arco_prisma', 'bow_7', 'Arco do Arco-Íris', { col: '#ff8ad8', over: { atk
 U2('u_lamina_nyx', 'sword_10', 'Lâmina de Nyx', { rar: 5, col: '#ff4fff', over: { atk: 450 }, aff: [['ls', 6], ['e_death', 90], ['crit', 10], ['critd', 40]] });
 U2('u_manto_estelar', 'body_l_10', 'Manto Estelar', { rar: 5, col: '#1a1a4a', over: { stats: { mp: 320 } }, aff: [['mag', 22], ['mpr', 16], ['allres', 10], ['cdr', 10]] });
 U2('u_olho_nyx', 'amu_fur_3', 'Olho de Nyx', { rar: 5, col: '#ff4fff', aff: [['crit', 9], ['critd', 50], ['e_death', 60], ['xp', 15]] });
+U2('u_sabre_temporal', 'sword_10', 'Sabre da Tempestade', { rar: 5, col: '#63d9ee', over: { atk: 410 }, aff: [['crit', 10], ['as', 12], ['e_ice', 70], ['spd', 7]] });
+U2('u_escudo_cometa', 'shield_7', 'Escudo de Cometa', { rar: 5, col: '#ffb45c', over: { def: 82 }, aff: [['allres', 12], ['thorns', 22], ['hp', 280], ['hpr', 8]] });
+U2('u_orbe_caos', 'wand_7', 'Orbe do Caos', { rar: 5, col: '#d982ff', over: { elem: 'energy', atk: 360, mag: 48 }, aff: [['mag', 18], ['crit', 9], ['e_energy', 75], ['cdr', 8]] });
+U2('u_corona_mar', 'amu_fur_3', 'Coroa do Mar Profundo', { rar: 5, col: '#70e8dc', aff: [['hp', 360], ['mp', 250], ['allres', 12], ['xp', 18]] });
 
 // ------------------------------------------------------------
 // PESCARIA
@@ -5390,32 +5398,32 @@ function castSpell(id) {
 // ------------------------------------------------------------
 function monsterLoot(mn) {
   const d = mn.def, p = G.p, items = [];
-  const luck = p.buffs.luck > G.t;
-  const gm = 1 + p.st.gold / 100 + (luck ? 0.5 : 0), mf = p.st.mf + (luck ? 40 : 0);
-  let gold = Math.round(rnd(d.gold[0], d.gold[1]) * gm);
+  const luck = p.buffs.luck > G.t, eventLuck = adminLuckFactor();
+  const gm = 1 + p.st.gold / 100 + (luck ? 0.5 : 0), mf = p.st.mf + (luck ? 40 : 0) + (eventLuck - 1) * 120;
+  let gold = Math.round(rnd(d.gold[0], d.gold[1]) * gm * eventLuck);
   if (mn.summoned) return { items, gold: Math.round(gold * 0.2) };
-  for (const [id, ch, a, b] of d.loot) if (ITEMS[id] && Math.random() < ch) items.push(makeItem(id, ITEMS[id].unique ? ITEMS[id].rar : 0, rnd(a, b)));
-  if (Math.random() < d.eq * (1 + mf / 200)) items.push(randomEquip(d.lvl, rollRarity(d.boss ? 2 : 0, mf), p.voc));
+  for (const [id, ch, a, b] of d.loot) if (ITEMS[id] && Math.random() < Math.min(1, ch * eventLuck)) items.push(makeItem(id, ITEMS[id].unique ? ITEMS[id].rar : 0, rnd(a, b)));
+  if (Math.random() < Math.min(1, d.eq * eventLuck) * (1 + mf / 200)) items.push(randomEquip(d.lvl, rollRarity(d.boss ? 2 : 0, mf), p.voc));
   if (d.boss) { items.push(randomEquip(d.lvl, rollRarity(3, mf), p.voc)); items.push(randomEquip(d.lvl, rollRarity(2, mf), p.voc)); }
-  if (d.lvl >= 12 && Math.random() < 0.012 + d.lvl * 0.0002) items.push(makeItem('pedra_forja', 0, 1));
-  if (d.lvl >= 20 && Math.random() < 0.008) items.push(makeItem(choice(['rubi', 'safira', 'esmeralda', 'ametista']), 0, 1));
-  if (Math.random() < 0.035) items.push(makeItem(potionFor(d.lvl, Math.random() < 0.5), 0, 1));
-  if (d.lvl >= 15 && Math.random() < 0.01) items.push(makeItem('bau_recompensa', 0, 1));
+  if (d.lvl >= 12 && Math.random() < Math.min(1, (0.012 + d.lvl * 0.0002) * eventLuck)) items.push(makeItem('pedra_forja', 0, 1));
+  if (d.lvl >= 20 && Math.random() < Math.min(1, 0.008 * eventLuck)) items.push(makeItem(choice(['rubi', 'safira', 'esmeralda', 'ametista']), 0, 1));
+  if (Math.random() < Math.min(1, 0.035 * eventLuck)) items.push(makeItem(potionFor(d.lvl, Math.random() < 0.5), 0, 1));
+  if (d.lvl >= 15 && Math.random() < Math.min(1, 0.01 * eventLuck)) items.push(makeItem('bau_recompensa', 0, 1));
   return { items, gold };
 }
 function chestLoot(kind, lvl) {
-  const p = G.p, items = [], mf = p.st.mf + (p.buffs.luck > G.t ? 40 : 0);
+  const p = G.p, items = [], eventLuck = adminLuckFactor(), mf = p.st.mf + (p.buffs.luck > G.t ? 40 : 0) + (eventLuck - 1) * 120;
   let gold;
   if (kind === 'wood') {
-    gold = rnd(lvl * 3 + 10, lvl * 9 + 30);
-    if (Math.random() < 0.75) items.push(makeItem(potionFor(lvl, Math.random() < 0.4), 0, rnd(2, 4)));
-    if (Math.random() < 0.5) items.push(randomEquip(lvl, rollRarity(0, mf + 20), p.voc));
-    if (Math.random() < 0.3) items.push(makeItem(choice(['maca', 'pao', 'queijo', 'carne', 'peixe']), 0, rnd(2, 5)));
-    if (lvl >= 15 && Math.random() < 0.18) items.push(makeItem('pedra_forja', 0, 1));
-    if (Math.random() < 0.06) items.push(makeItem(choice(['rubi', 'safira', 'esmeralda', 'ametista']), 0, 1));
-    if (Math.random() < 0.08) items.push(makeItem('scroll_ret', 0, 1));
+    gold = Math.round(rnd(lvl * 3 + 10, lvl * 9 + 30) * eventLuck);
+    if (Math.random() < Math.min(1, 0.75 * eventLuck)) items.push(makeItem(potionFor(lvl, Math.random() < 0.4), 0, rnd(2, 4)));
+    if (Math.random() < Math.min(1, 0.5 * eventLuck)) items.push(randomEquip(lvl, rollRarity(0, mf + 20), p.voc));
+    if (Math.random() < Math.min(1, 0.3 * eventLuck)) items.push(makeItem(choice(['maca', 'pao', 'queijo', 'carne', 'peixe']), 0, rnd(2, 5)));
+    if (lvl >= 15 && Math.random() < Math.min(1, 0.18 * eventLuck)) items.push(makeItem('pedra_forja', 0, 1));
+    if (Math.random() < Math.min(1, 0.06 * eventLuck)) items.push(makeItem(choice(['rubi', 'safira', 'esmeralda', 'ametista']), 0, 1));
+    if (Math.random() < Math.min(1, 0.08 * eventLuck)) items.push(makeItem('scroll_ret', 0, 1));
   } else {
-    gold = rnd(lvl * 15 + 100, lvl * 32 + 300);
+    gold = Math.round(rnd(lvl * 15 + 100, lvl * 32 + 300) * eventLuck);
     items.push(randomEquip(lvl, Math.max(2, rollRarity(2, mf + 40)), p.voc));
     if (Math.random() < 0.6) items.push(randomEquip(lvl, rollRarity(1, mf + 20), p.voc));
     items.push(makeItem(potionFor(lvl), 0, rnd(3, 6)));
@@ -10551,7 +10559,7 @@ UI.openGuild = (refresh) => {
 // O nome "caio_admin1615" é reservado: só cria o personagem com a senha.
 // O código guarda apenas o resumo SHA-256 da senha, nunca a senha.
 // O administrador tem o painel /admin (ouro, nível, itens, teleporte,
-// modo deus, hora do dia, curar e limpar monstros).
+// modo deus, hora do dia, curar, limpar monstros e iniciar eventos online).
 // ============================================================
 const ADMIN_NAME = 'caio_admin1615';
 const ADMIN_HASH = '53bf69ac7e67c810817f0fc5fb21f40f25b66d548d2a35a6f39ece40cb503467';
@@ -10631,8 +10639,60 @@ UI.openAdmin = () => {
       done(n + ' monstros derrotados');
     }, 'danger'),
   );
+  sec('Admin Abuse');
+  b.appendChild(el('p', 'hint', 'Sorte e presentes vão para o servidor. Meteoros e chefes aparecem perto de você, no mesmo mapa.'));
+  r = row();
+  r.append(btn('Sorte 5x · 2 min', () => adminAbuseStart('luck')), btn('Chuva de meteoros', () => adminAbuseStart('meteor')), btn('Dar Caixa do Caos a todos', () => adminAbuseStart('gift'), 'pri'));
+  const bosses = Object.entries(MON).filter(([, d]) => d.boss);
+  if (bosses.length) {
+    r = row(); const bossSel = el('select', 'svcode');
+    for (const [id, d] of bosses) { const o = el('option', null, d.name); o.value = id; bossSel.appendChild(o); }
+    r.append(bossSel, btn('Invocar chefe para o servidor', () => adminAbuseStart('boss', { mon: bossSel.value }), 'danger'));
+  }
   b.appendChild(el('p', 'hint', 'Atalho: /admin abre este painel. Esta conta só existe neste navegador (o save fica no aparelho).'));
 };
+
+function adminLuckFactor() { return G.adminLuckUntil > Date.now() ? 5 : 1; }
+function adminAbuseStart(kind, extra) {
+  if (!isAdmin()) return notice('Só o administrador pode iniciar esse evento.', '#ff8a6a');
+  const e = Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8), k: kind, at: Date.now(), map: G.map.id, x: G.p.x, y: G.p.y, by: G.p.name }, extra || {});
+  NET.adminEvent = e; NET.lastPres = ''; applyAdminAbuse(e);
+  if (NET.room) { netPresence(); notice('Evento enviado para o servidor ' + (NET.sv || '') + '!', '#ffda70'); }
+  else notice('Você está sem servidor online: o evento só acontece no seu jogo.', '#ff9d68');
+}
+function peerAdminAbuse(a, peer, e) {
+  if (!G.started || !e || !isAdminName(a.name) || isMuted(a) || !['luck', 'gift', 'meteor', 'boss'].includes(e.k) || typeof e.id !== 'string' || e.id.length > 48 || !Number.isFinite(e.at) || !MAPGEN[e.map] || !Number.isFinite(e.x) || !Number.isFinite(e.y) || Date.now() - e.at > 45000 || e.at - Date.now() > 5000) return;
+  const key = peer + ':' + e.id;
+  if (NET.seenAdminEvents.has(key)) return;
+  NET.seenAdminEvents.add(key);
+  if (NET.seenAdminEvents.size > 80) NET.seenAdminEvents.delete(NET.seenAdminEvents.values().next().value);
+  applyAdminAbuse(e);
+}
+function applyAdminAbuse(e) {
+  const p = G.p;
+  if (!p || !G.started) return;
+  if (e.k === 'luck') {
+    G.adminLuckUntil = Math.max(G.adminLuckUntil || 0, Date.now() + 120000);
+    notice('Admin Abuse: sorte 5x por 2 minutos!', '#ffda70'); log('[Admin Abuse] Sorte 5x ativada!', 'lvl'); sfx('rare'); return;
+  }
+  if (e.k === 'gift') {
+    const gift = makeItem('caixa_caos', 0, 1);
+    if (!addToBag(p, gift)) dropItem(p, gift);
+    G.dirty.bag = 1; G.saveDirty = true; saveGame();
+    notice('Presente do Admin Abuse: Caixa do Caos!', '#d982ff'); log('[Admin Abuse] Você ganhou uma Caixa do Caos.', 'loot'); sfx('rare'); return;
+  }
+  if (G.map.id !== e.map || Math.abs(G.p.x - e.x) > 24 || Math.abs(G.p.y - e.y) > 18) return;
+  if (e.k === 'meteor') {
+    const targets = G.map.mons.filter((m) => !m.dead && !m.ally && cheb(m, e) <= 9).slice(0, 12);
+    for (let i = 0; i < 14; i++) { const x = clamp(e.x + rnd(-8, 8), 1, G.map.w - 2), y = clamp(e.y + rnd(-6, 6), 1, G.map.h - 2); addFx(x, y, 'fire', 180); G.beams.push({ x0: x + 0.5, y0: y - 4, x1: x + 0.5, y1: y + 0.5, col: '#ffb45c', c2: '#fff1bc', t0: G.t, dur: 220, w: 2 }); }
+    for (const m of targets) if (!m.dead) playerHit(m, 180 + p.lvl * 24, 'fire', { fx: 'fire', quiet: true });
+    G.shake = Math.max(G.shake, 7); notice('Admin Abuse: chuva de meteoros!', '#ffb45c'); log('[Admin Abuse] Chuva de meteoros: ' + targets.length + ' monstros atingidos.', 'lvl'); sfx('boom'); return;
+  }
+  if (e.k === 'boss' && own(MON, e.mon) && MON[e.mon].boss && G.map.mons.length < 80) {
+    const a = spawnMonster(G.map, e.mon, clamp(e.x | 0, 1, G.map.w - 2), clamp(e.y | 0, 1, G.map.h - 2), { r: 7 });
+    if (a) { notice('Admin Abuse: ' + MON[e.mon].name + ' apareceu!', '#ff706a'); log('[Admin Abuse] ' + MON[e.mon].name + ' foi invocado!', 'lvl'); sfx('portal'); }
+  }
+}
 
 // ---- 70-net.js ----
 // ============================================================
@@ -10648,7 +10708,7 @@ const NET = {
   mutes: new Set(), bans: new Set(), banList: [], banOn: false, admin: false, banned: false,
   db: null, user: null, uid: null, me: null,
   lastPres: '', presT: 0, presQ: 0, say: null, saving: false, pending: null, ranking: [], rankOn: false,
-  seenSay: new Map(), seenFx: new Map(), seenInv: new Set(), lastPx: new Map(),
+  seenSay: new Map(), seenFx: new Map(), seenInv: new Set(), lastPx: new Map(), seenAdminEvents: new Set(), adminEvent: null,
   pt: null, inv: [], fx: [], fxI: 0, follow: null, followT: 0, shareWarn: 0,
   gifts: [], giftI: 0, acks: [], seenGift: new Set(), giftQ: [],
   fs: null, fsKey: 'null', fc: null, fcI: 0, seenFc: new Map(),
@@ -10856,6 +10916,7 @@ function netPresence() {
     h: Math.round(clamp(p.hp / p.maxHp, 0, 1) * 100), dd: p.dead ? 1 : 0, px: Math.floor(p.stats.killXp || 0),
   };
   if (p.stand && Array.isArray(p.stands) && p.stands.includes(p.stand) && STANDS[p.stand]) pres.sd = p.stand;
+  if (NET.adminEvent && Date.now() - NET.adminEvent.at < 45000) pres.ae = NET.adminEvent;
   if (NET.say) pres.s = NET.say;
   if (NET.pt) pres.pt = NET.pt;
   const now = Date.now();
@@ -10939,6 +11000,7 @@ function onPeers(ch) {
     peerAcks(a, pe.peer, q.ga);
     peerGifts(a, pe.peer, q.gf);
     peerFx(a, pe.peer, q.fx);
+    peerAdminAbuse(a, pe.peer, q.ae);
     peerXp(a, pe.peer, q.px);
     // pescaria (linha na água), peixe raro anunciado, anúncio da Praça e troca
     const fs = q.fs;

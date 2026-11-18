@@ -296,6 +296,7 @@ dl.help dt { color: #ffd27a; } dl.help dd { margin: 0; color: #d8d0c0; }
 #w-servers .svgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 560px) { .svgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .titlenet { display: flex; justify-content: center; align-items: center; gap: 2px; margin: -6px auto 16px; font-size: 14px; color: #d8e8d0; text-shadow: 1px 1px 0 #000; min-height: 20px; }
+.guide-link { display: inline-block; margin: -8px auto 14px; padding: 7px 12px; color: var(--mint); border: 1px solid var(--hi); background: rgba(28,23,39,.92); text-decoration: none; } .guide-link:hover { color: var(--gold); }
 .savecard { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 10px 14px; margin: 0 auto 14px; max-width: 520px; background: rgba(28,23,39,.94); box-shadow: inset 2px 2px 0 var(--hi), inset -2px -2px 0 var(--lo), 0 0 0 2px var(--lo); }
 .savecard canvas { width: 48px; height: 56px; image-rendering: pixelated; }
 .savecard b { display: block; font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1; color: #ffd27a; } .savecard small { color: var(--muted); }
@@ -521,6 +522,192 @@ a.btn { text-decoration: none; display: inline-block; }
 </div>
 <div id="tip" hidden></div>
 <img id="drag" hidden alt="">
+<script>
+// Replaces the ChatGPT artifact bridge with Firebase for the public game.
+// This file is embedded in index.html as an ordinary script; dynamic imports
+// let Firebase finish loading before netInit starts.
+window.quadriaFirebaseReadyPromise = (async () => {
+  try {
+    const [appSdk, databaseSdk, authSdk] = await Promise.all([
+      import('https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js'),
+      import('https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js'),
+    ]);
+    const { getApp, getApps, initializeApp } = appSdk;
+    const {
+      getDatabase, ref, set, get, remove, onValue, onDisconnect,
+      query, orderByChild, limitToLast, limitToFirst, push,
+    } = databaseSdk;
+    const { getAuth, onAuthStateChanged, signInAnonymously } = authSdk;
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyApR939SSOz4yViZhYxnJCsJPSPoIlIc0w',
+      authDomain: 'quadria-7a811.firebaseapp.com',
+      projectId: 'quadria-7a811',
+      storageBucket: 'quadria-7a811.firebasestorage.app',
+      messagingSenderId: '202352731481',
+      appId: '1:202352731481:web:cab17e02604733b4e0d848',
+      databaseURL: 'https://quadria-7a811-default-rtdb.europe-west1.firebasedatabase.app',
+    };
+    const app = getApps().some((item) => item.name === 'Quadria')
+      ? getApp('Quadria')
+      : initializeApp(firebaseConfig, 'Quadria');
+    const db = getDatabase(app, firebaseConfig.databaseURL);
+    const auth = getAuth(app);
+    const user = await new Promise((resolve, reject) => {
+      let stop = () => {};
+      stop = onAuthStateChanged(auth, (currentUser) => {
+        stop();
+        resolve(currentUser);
+      }, reject);
+    }).then((currentUser) => currentUser || signInAnonymously(auth).then((credential) => credential.user));
+    const uid = user.uid;
+    const session = push(ref(db, 'quadriaOnline/sessions')).key;
+
+    const path = (value) => 'quadriaData/' + String(value || '').split('/').filter(Boolean).join('/');
+    const snapshotDoc = (snapshot, id) => ({
+      id,
+      exists: snapshot.exists(),
+      data: () => snapshot.val() || {},
+    });
+    const dbApi = {
+      doc(value) {
+        const location = ref(db, path(value));
+        const id = String(value).split('/').pop();
+        return {
+          set: (data) => set(location, data),
+          get: async () => snapshotDoc(await get(location), id),
+          delete: () => remove(location),
+        };
+      },
+      collection(name) {
+        let orderField = null;
+        let orderDirection = 'asc';
+        let maxRows = null;
+        const api = {
+          orderBy(field, direction = 'asc') {
+            orderField = field;
+            orderDirection = direction === 'desc' ? 'desc' : 'asc';
+            return api;
+          },
+          limit(count) {
+            maxRows = Math.max(1, Math.floor(Number(count) || 1));
+            return api;
+          },
+          onSnapshot(callback, error) {
+            let location = ref(db, path(name));
+            if (orderField) {
+              const constraints = [orderByChild(orderField)];
+              if (maxRows) constraints.push(orderDirection === 'desc' ? limitToLast(maxRows) : limitToFirst(maxRows));
+              location = query(location, ...constraints);
+            }
+            return onValue(location, (snapshot) => {
+              const docs = Object.entries(snapshot.val() || {}).map(([id, data]) => ({ id, data: () => data }));
+              if (orderField) {
+                docs.sort((a, b) => {
+                  const delta = (+a.data()[orderField] || 0) - (+b.data()[orderField] || 0);
+                  return orderDirection === 'desc' ? -delta : delta;
+                });
+              }
+              callback({ docs: maxRows ? docs.slice(0, maxRows) : docs });
+            }, error);
+          },
+        };
+        return api;
+      },
+    };
+
+    const listenConnection = (connected, disconnected) => onValue(ref(db, '.info/connected'), (snapshot) => {
+      if (snapshot.val()) connected();
+      else if (disconnected) disconnected();
+    });
+
+    class FirebaseRoom {
+      constructor(roomName) {
+        this.roomName = roomName;
+        this.base = 'quadriaOnline/rooms/' + roomName + '/players';
+        this.current = ref(db, this.base);
+        this.own = ref(db, this.base + '/' + uid + '/' + session);
+        this.unsubs = [];
+        this.closed = false;
+        this.connectedState = false;
+        this.lastPresence = null;
+        this.connectionUnsub = null;
+        this.cleanupReady = onDisconnect(this.own).remove();
+      }
+      connected() { return !this.closed && this.connectedState; }
+      onConnection(connected, disconnected) {
+        if (this.connectionUnsub) this.connectionUnsub();
+        this.connectionUnsub = listenConnection(() => {
+          this.connectedState = true;
+          this.cleanupReady = onDisconnect(this.own).remove();
+          this.cleanupReady.then(() => {
+            if (!this.closed && this.lastPresence) return set(this.own, this.lastPresence);
+          }).then(connected).catch(() => { this.connectedState = false; if (disconnected) disconnected(); });
+        }, () => {
+          this.connectedState = false;
+          if (disconnected) disconnected();
+        });
+        return this.connectionUnsub;
+      }
+      onPeers(callback, error) {
+        const unsubscribe = onValue(this.current, (snapshot) => {
+          const peers = [];
+          snapshot.forEach((userSnapshot) => userSnapshot.forEach((sessionSnapshot) => {
+            const value = sessionSnapshot.val() || {};
+            peers.push({
+              peer: sessionSnapshot.key,
+              by: userSnapshot.key,
+              kind: 'viewer',
+              presence: value.presence || {},
+              isMe: sessionSnapshot.key === session,
+              sameTab: sessionSnapshot.key === session,
+              guest: false,
+            });
+          }));
+          callback({ peers });
+        }, error);
+        this.unsubs.push(unsubscribe);
+        return unsubscribe;
+      }
+      presence(value) {
+        if (this.closed) return Promise.resolve();
+        this.lastPresence = { kind: 'viewer', presence: value || {}, at: Date.now() };
+        return this.cleanupReady.then(() => set(this.own, this.lastPresence));
+      }
+      leave() {
+        this.closed = true;
+        this.unsubs.forEach((unsubscribe) => unsubscribe());
+        if (this.connectionUnsub) this.connectionUnsub();
+        return remove(this.own);
+      }
+      async join(roomName) {
+        const room = new FirebaseRoom(roomName);
+        await room.cleanupReady;
+        return room;
+      }
+    }
+
+    const lobby = new FirebaseRoom('lobby');
+    await lobby.cleanupReady;
+    await lobby.presence({ sv: null });
+    window.claude = window.claude || {};
+    window.claude.use = async (name) => {
+      if (name === 'room') return lobby;
+      if (name === 'db') return dbApi;
+      if (name === 'user') return { id: async () => uid, canEdit: async () => false };
+      return null;
+    };
+    window.quadriaFirebaseError = null;
+    return { uid, session };
+  } catch (error) {
+    window.quadriaFirebaseError = error && (error.code || error.message) || 'firebase/unavailable';
+    console.error('Firebase do Quadria indisponível; o jogo continuará em modo solo.', error);
+    return null;
+  }
+})();
+
+</script>
 <script>
 "use strict";
 
@@ -9298,8 +9485,9 @@ function buildTitle() {
   const logo = el('h1', 'logo', 'QUADRIA');
   const tag = el('p', 'tag', 'Um MMORPG online de cabeças quadradas: ' + Object.keys(MAPGEN).length + ' mundos, ' + Object.keys(MON).length + ' monstros, ' + Object.keys(ITEMS).length + ' itens e um reino inteiro para salvar, sozinho ou com amigos.');
   const tn = el('p', 'titlenet'); tn.id = 'titlenet';
+  const guide = el('a', 'guide-link', '📖 Guia da atualização'); guide.href = 'guia.html'; guide.target = '_blank'; guide.rel = 'noopener';
   const svp = el('div', 'svpick'); svp.id = 'svpick'; svp.hidden = true;
-  card.append(logo, tag, tn, svp);
+  card.append(logo, tag, guide, tn, svp);
   UI.titleNetK = '';
   if (!UI.selSv) UI.selSv = svSaved();
   const local = readLocalSave();
@@ -11163,6 +11351,7 @@ function claudeUse(name) {
   try { return window.claude && typeof window.claude.use === 'function' ? window.claude.use(name).catch(() => null) : Promise.resolve(null); } catch (e) { return Promise.resolve(null); }
 }
 async function netInit() {
+  if (window.quadriaFirebaseReadyPromise) await window.quadriaFirebaseReadyPromise;
   const [room, db, user] = await Promise.all([claudeUse('room'), claudeUse('db'), claudeUse('user')]);
   NET.lobby = room || null; NET.db = db || null; NET.user = user || null;
   if (NET.user) {
@@ -12760,4 +12949,3 @@ function boot(hotData) {
 </script>
 </body>
 </html>
-

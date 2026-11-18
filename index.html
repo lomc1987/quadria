@@ -672,7 +672,10 @@ window.quadriaFirebaseReadyPromise = (async () => {
       }
       presence(value) {
         if (this.closed) return Promise.resolve();
-        this.lastPresence = { kind: 'viewer', presence: value || {}, at: Date.now() };
+        const details = value && typeof value === 'object' ? value : {};
+        // Firebase drops null-valued children. Keep presence non-empty even
+        // when the game's initial payload is only { sv: null }.
+        this.lastPresence = { kind: 'viewer', presence: { online: true, ...details }, at: Date.now() };
         return this.cleanupReady.then(() => set(this.own, this.lastPresence));
       }
       leave() {
